@@ -1,5 +1,6 @@
 package gerasimov.springdev.exercise.one;
 
+import gerasimov.springdev.exercise.one.api.NameProvider;
 import gerasimov.springdev.exercise.one.models.Question;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,6 +17,10 @@ public class Run {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("/beans.xml");
         TestPerformer testPerformer = context.getBean(TestPerformer.class);
+        NameProvider nameProvider = (NameProvider) context.getBean("nameProvider");
+
+        String name = nameProvider.getName();
+
         Map<Question, Boolean> result = testPerformer.performTest();
 
         final List<Question> wrongQuestions = result.entrySet().stream()
@@ -24,9 +29,9 @@ public class Run {
                 .collect(Collectors.toList());
 
         if (wrongQuestions.isEmpty()) {
-            System.out.println("Correct!");
+            System.out.println("Good job, " + name + "!");
         } else {
-            System.out.println("Wrong questions: " + wrongQuestions);
+            System.out.println(name + ", you failed test, incorrect answers received for questions: " + wrongQuestions);
         }
     }
 }
