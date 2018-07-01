@@ -4,6 +4,8 @@ import gerasimov.springdev.exercise.one.Run;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,10 +17,11 @@ import java.util.List;
 /**
  * Created by admin on 27.06.2018.
  */
+@Service
 public class ClassPathCSVQuestionFabric implements QuestionsFabric {
     private final String file;
 
-    public ClassPathCSVQuestionFabric(String file) {
+    public ClassPathCSVQuestionFabric(@Value("/questions.csv") String file) {
         this.file = file;
     }
 

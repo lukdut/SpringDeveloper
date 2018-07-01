@@ -1,6 +1,7 @@
 package gerasimov.springdev.exercise.one.impl;
 
 import gerasimov.springdev.exercise.one.api.NameProvider;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
  * 27.06.2018
  * Но это не точно
  */
+@Service("nameProvider")
 public class ConsoleInputNameProvider implements NameProvider {
     @Override
     public String getName() {

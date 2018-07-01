@@ -4,6 +4,7 @@ import gerasimov.springdev.exercise.one.api.AnswerProvider;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import java.util.stream.IntStream;
 /**
  * Created by admin on 27.06.2018.
  */
+@Service
 public class TestPerformer {
     private final QuestionsFabric questionsFabric;
     private final AnswerProvider answerProvider;
