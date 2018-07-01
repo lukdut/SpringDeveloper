@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="answerProvider" class="gerasimov.springdev.exercise.one.impl.ConsoleInputAnswersProvider"/>
+    <bean id="nameProvider" class="gerasimov.springdev.exercise.one.impl.ConsoleInputNameProvider"/>
+    <bean id="questionsProvider" class="gerasimov.springdev.exercise.one.impl.ClassPathCSVQuestionFabric">
+        <constructor-arg value="/questions.csv"/>
+    </bean>
+
+    <bean id="performer" class="gerasimov.springdev.exercise.one.TestPerformer">
+        <constructor-arg name="questionsFabric" ref="questionsProvider"/>
+        <constructor-arg name="answerProvider" ref="answerProvider"/>
+    </bean>
+</beans>

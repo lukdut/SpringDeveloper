@@ -1,0 +1,5 @@
+﻿Как зовут преподавателя?;Юрий Дворжецкий;Чапаев Василий;Шабунин Михаил;Дмитрий Беклемишев
+Как называется курс?;Разработчик на Spring FrameWork;Разработчик на Весна Каркас;QuickBasic in Action;С++ за 21 день
+Что такое IoC в контексте данного курса?;Inversion of Control;Instance of Context;Instance of Collection;Inversion of Creation
+Что такое DI в контексте данного курса?;Dependency Injection;Dynamic Invocation;Dependency Implementation;Dangerous Incect;Dublicate Implementation
+Как связаны IoC и DI?;DI является одним из способов реализации IoC;IoC является одним из способов реализации DI;Это, по большей части, одно и то же;Никак не связаны - это разные вещи
