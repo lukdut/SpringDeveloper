@@ -1,5 +1,6 @@
 package gerasimov.springdev.exercise.one.impl;
 
+import gerasimov.springdev.exercise.one.api.MessagesProvider;
 import gerasimov.springdev.exercise.one.api.NameProvider;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,20 @@ import java.io.InputStreamReader;
  */
 @Service("nameProvider")
 public class ConsoleInputNameProvider implements NameProvider {
+    private final MessagesProvider messagesProvider;
+
+    public ConsoleInputNameProvider(MessagesProvider messagesProvider) {
+        this.messagesProvider = messagesProvider;
+    }
+
     @Override
     public String getName() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Tell your first and last name: ");
+        System.out.print(messagesProvider.getMessage("name.request"));
         try {
             return br.readLine();
         } catch (IOException e) {
-            return "Duuude";
+            return messagesProvider.getMessage("name.default");
         }
     }
 }

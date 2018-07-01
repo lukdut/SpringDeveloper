@@ -1,6 +1,7 @@
 package gerasimov.springdev.exercise.one;
 
 import gerasimov.springdev.exercise.one.api.AnswerProvider;
+import gerasimov.springdev.exercise.one.api.MessagesProvider;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
@@ -17,10 +18,12 @@ import java.util.stream.IntStream;
 public class TestPerformer {
     private final QuestionsFabric questionsFabric;
     private final AnswerProvider answerProvider;
+    private final MessagesProvider messagesProvider;
 
-    TestPerformer(QuestionsFabric questionsFabric, AnswerProvider answerProvider) {
+    TestPerformer(QuestionsFabric questionsFabric, AnswerProvider answerProvider, MessagesProvider messagesProvider) {
         this.questionsFabric = questionsFabric;
         this.answerProvider = answerProvider;
+        this.messagesProvider = messagesProvider;
     }
 
     Map<Question, Boolean> performTest() throws Exception {
@@ -34,12 +37,12 @@ public class TestPerformer {
             IntStream.range(0, variants.size()).forEach(index ->
                     System.out.println(index + ": " + variants.get(index).getAnswer()));
 
-            System.out.println("Please, chose all correct answer(s) (','-separated):");
+            System.out.println(messagesProvider.getMessage("answer.choose"));
 
             Optional<Collection<Integer>> answers = null;
             do {
                 if (answers != null) {
-                    System.out.println("incorrect input!");
+                    System.out.println(messagesProvider.getMessage("input.wrong"));
                 }
                 answers = answerProvider.getAnswers();
             }

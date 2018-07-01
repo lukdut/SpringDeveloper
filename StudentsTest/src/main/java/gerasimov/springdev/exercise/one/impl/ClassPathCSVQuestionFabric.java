@@ -1,6 +1,7 @@
 package gerasimov.springdev.exercise.one.impl;
 
 import gerasimov.springdev.exercise.one.Run;
+import gerasimov.springdev.exercise.one.api.MessagesProvider;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
@@ -20,9 +21,11 @@ import java.util.List;
 @Service
 public class ClassPathCSVQuestionFabric implements QuestionsFabric {
     private final String file;
+    private final MessagesProvider messagesProvider;
 
-    public ClassPathCSVQuestionFabric(@Value("/questions.csv") String file) {
+    public ClassPathCSVQuestionFabric(@Value("${questions.source}") String file, MessagesProvider messagesProvider) {
         this.file = file;
+        this.messagesProvider = messagesProvider;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class ClassPathCSVQuestionFabric implements QuestionsFabric {
                 questions.add(new Question(questionParts[0], answers));
             }
         } catch (IOException e) {
-            System.out.println("Can not load questions!");
+            System.out.println(messagesProvider.getMessage("questions.load.error"));
         }
 
         return questions;
