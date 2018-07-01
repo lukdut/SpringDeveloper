@@ -21,7 +21,7 @@
         </plugins>
     </build>
     <modules>
-        <module>Exercise1</module>
+        <module>StudentsTest</module>
     </modules>
 
     <dependencyManagement>
