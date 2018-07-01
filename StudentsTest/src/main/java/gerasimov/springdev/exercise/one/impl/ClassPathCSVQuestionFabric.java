@@ -5,7 +5,6 @@ import gerasimov.springdev.exercise.one.api.MessagesProvider;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -20,11 +19,9 @@ import java.util.List;
  */
 @Service
 public class ClassPathCSVQuestionFabric implements QuestionsFabric {
-    private final String file;
     private final MessagesProvider messagesProvider;
 
-    public ClassPathCSVQuestionFabric(@Value("${questions.source}") String file, MessagesProvider messagesProvider) {
-        this.file = file;
+    public ClassPathCSVQuestionFabric(MessagesProvider messagesProvider) {
         this.messagesProvider = messagesProvider;
     }
 
@@ -33,7 +30,7 @@ public class ClassPathCSVQuestionFabric implements QuestionsFabric {
         List<Question> questions = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        Run.class.getResourceAsStream(file), StandardCharsets.UTF_8))) {
+                        Run.class.getResourceAsStream(messagesProvider.getMessage("questions.file")), StandardCharsets.UTF_8))) {
             for (String line; (line = reader.readLine()) != null; ) {
                 String[] questionParts = line.split(";");
                 if (questionParts.length < 3) {
