@@ -1,11 +1,11 @@
 package gerasimov.springdev.exercise.one;
 
+import gerasimov.springdev.exercise.one.api.AnswerProvider;
 import gerasimov.springdev.exercise.one.api.QuestionsFabric;
 import gerasimov.springdev.exercise.one.models.Answer;
 import gerasimov.springdev.exercise.one.models.Question;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -14,17 +14,17 @@ import java.util.stream.IntStream;
  */
 public class TestPerformer {
     private final QuestionsFabric questionsFabric;
-    private final Supplier<Optional<Collection<Integer>>> answerProvider;
+    private final AnswerProvider answerProvider;
 
-    TestPerformer(QuestionsFabric questionsFabric, Supplier<Optional<Collection<Integer>>> answerProvider) {
+    TestPerformer(QuestionsFabric questionsFabric, AnswerProvider answerProvider) {
         this.questionsFabric = questionsFabric;
         this.answerProvider = answerProvider;
     }
 
-    Map<Question, Boolean> performTest() {
+    Map<Question, Boolean> performTest() throws Exception {
         List<Question> questions = questionsFabric.getQuestions();
         Collections.shuffle(questions);
-        return questions.stream().collect(Collectors.toMap(question -> question, question -> {
+        Map<Question, Boolean> results = questions.stream().collect(Collectors.toMap(question -> question, question -> {
             List<Answer> variants = question.getAnswers();
             Collections.shuffle(variants);
 
@@ -39,12 +39,15 @@ public class TestPerformer {
                 if (answers != null) {
                     System.out.println("incorrect input!");
                 }
-                answers = answerProvider.get();
+                answers = answerProvider.getAnswers();
             }
             while (!answers.isPresent() || answers.get().stream().anyMatch(integer -> integer >= variants.size() || integer < 0));
 
             return answers.get().stream()
                     .allMatch(answerIndex -> variants.get(answerIndex).isCorrect());
         }));
+
+        answerProvider.close();
+        return results;
     }
 }

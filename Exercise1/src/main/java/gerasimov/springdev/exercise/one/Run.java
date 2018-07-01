@@ -17,11 +17,16 @@ public class Run {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("/beans.xml");
         TestPerformer testPerformer = context.getBean(TestPerformer.class);
-        NameProvider nameProvider = (NameProvider) context.getBean("nameProvider");
+        NameProvider nameProvider = context.getBean("nameProvider", NameProvider.class);
 
         String name = nameProvider.getName();
 
-        Map<Question, Boolean> result = testPerformer.performTest();
+        Map<Question, Boolean> result = null;
+        try {
+            result = testPerformer.performTest();
+        } catch (Exception e) {
+            System.out.println("Can not perform test: " + e.getMessage());
+        }
 
         final List<Question> wrongQuestions = result.entrySet().stream()
                 .filter(entry -> !entry.getValue())

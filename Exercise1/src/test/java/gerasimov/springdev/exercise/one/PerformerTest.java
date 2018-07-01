@@ -14,7 +14,7 @@ import java.util.Map;
 public class PerformerTest {
 
     @Test
-    public void passedTest() {
+    public void passedTest() throws Exception {
         TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(true, 5), new FixedAnswerProvider(0));
         final Map<Question, Boolean> result = testPerformer.performTest();
 
@@ -24,7 +24,7 @@ public class PerformerTest {
     }
 
     @Test
-    public void failedTest() {
+    public void failedTest() throws Exception {
         TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(false, 5), new FixedAnswerProvider(0));
         final Map<Question, Boolean> result = testPerformer.performTest();
 

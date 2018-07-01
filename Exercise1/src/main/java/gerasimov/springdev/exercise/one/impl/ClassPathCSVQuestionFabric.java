@@ -24,13 +24,10 @@ public class ClassPathCSVQuestionFabric implements QuestionsFabric {
 
     @Override
     public List<Question> getQuestions() {
-
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        Run.class.getResourceAsStream(file), StandardCharsets.UTF_8));
-
         List<Question> questions = new ArrayList<>();
-        try {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        Run.class.getResourceAsStream(file), StandardCharsets.UTF_8))) {
             for (String line; (line = reader.readLine()) != null; ) {
                 String[] questionParts = line.split(";");
                 if (questionParts.length < 3) {
@@ -49,10 +46,5 @@ public class ClassPathCSVQuestionFabric implements QuestionsFabric {
         }
 
         return questions;
-
-       /* return IntStream.range(0, 3).mapToObj(questionNum ->
-                new Question("Question_" + questionNum, IntStream.range(0, 5).mapToObj(
-                        answerNum -> new Answer("Answer_" + answerNum, answerNum == 0))
-                        .collect(Collectors.toList()))).collect(Collectors.toList());*/
     }
 }

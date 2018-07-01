@@ -1,22 +1,23 @@
 package gerasimov.springdev.exercise.one.impl;
 
+import gerasimov.springdev.exercise.one.api.AnswerProvider;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Created by admin on 27.06.2018.
  */
-public class ConsoleInputAnswersProvider implements Supplier<Optional<Collection<Integer>>> {
+public class ConsoleInputAnswersProvider implements AnswerProvider {
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     @Override
-    public Optional<Collection<Integer>> get() {
+    public Optional<Collection<Integer>> getAnswers() {
         System.out.print("-> ");
         try {
             String[] answers = br.readLine().split(",");
@@ -34,5 +35,10 @@ public class ConsoleInputAnswersProvider implements Supplier<Optional<Collection
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void close() throws Exception {
+        br.close();
     }
 }
