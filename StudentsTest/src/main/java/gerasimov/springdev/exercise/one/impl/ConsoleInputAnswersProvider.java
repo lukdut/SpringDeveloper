@@ -1,6 +1,7 @@
 package gerasimov.springdev.exercise.one.impl;
 
 import gerasimov.springdev.exercise.one.api.AnswerProvider;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by admin on 27.06.2018.
  */
+@Service
 public class ConsoleInputAnswersProvider implements AnswerProvider {
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 

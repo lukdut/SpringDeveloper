@@ -2,6 +2,7 @@ package gerasimov.springdev.exercise.one;
 
 import gerasimov.springdev.exercise.one.mock.FixedAnswerProvider;
 import gerasimov.springdev.exercise.one.mock.QuestionFabricMock;
+import gerasimov.springdev.exercise.one.mock.TestMessageProvider;
 import gerasimov.springdev.exercise.one.models.Question;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class PerformerTest {
 
     @Test
     public void passedTest() throws Exception {
-        TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(true, 5), new FixedAnswerProvider(0));
+        TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(true, 5), new FixedAnswerProvider(0), new TestMessageProvider());
         final Map<Question, Boolean> result = testPerformer.performTest();
 
         Assert.assertEquals(5, result.size());
@@ -25,7 +26,7 @@ public class PerformerTest {
 
     @Test
     public void failedTest() throws Exception {
-        TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(false, 5), new FixedAnswerProvider(0));
+        TestPerformer testPerformer = new TestPerformer(new QuestionFabricMock(false, 5), new FixedAnswerProvider(0), new TestMessageProvider());
         final Map<Question, Boolean> result = testPerformer.performTest();
 
         Assert.assertEquals(5, result.size());
