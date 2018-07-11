@@ -1,0 +1,7 @@
+application:
+    locale: "ru_RU"
+
+spring:
+  output:
+    ansi:
+      enabled: always
