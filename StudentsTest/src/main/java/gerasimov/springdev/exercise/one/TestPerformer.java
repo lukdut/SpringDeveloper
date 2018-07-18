@@ -20,7 +20,7 @@ public class TestPerformer {
     private final AnswerProvider answerProvider;
     private final MessagesProvider messagesProvider;
 
-    TestPerformer(QuestionsFabric questionsFabric, AnswerProvider answerProvider, MessagesProvider messagesProvider) {
+    public TestPerformer(QuestionsFabric questionsFabric, AnswerProvider answerProvider, MessagesProvider messagesProvider) {
         this.questionsFabric = questionsFabric;
         this.answerProvider = answerProvider;
         this.messagesProvider = messagesProvider;

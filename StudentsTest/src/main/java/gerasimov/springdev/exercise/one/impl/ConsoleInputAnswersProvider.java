@@ -41,6 +41,7 @@ public class ConsoleInputAnswersProvider implements AnswerProvider {
 
     @Override
     public void close() throws Exception {
-        br.close();
+        //BufferedReader 'br' intentionally left open for console to left open too.
+        //Spring shell will exit with IOException because closing reader will cause console closing.
     }
 }
