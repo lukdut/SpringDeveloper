@@ -24,6 +24,4 @@ public class ShellService {
         booksDAO.addBook(title, authors, genres);
         System.out.println("done");
     }
-
-
 }
