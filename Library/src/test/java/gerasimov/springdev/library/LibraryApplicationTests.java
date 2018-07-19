@@ -3,6 +3,7 @@ package gerasimov.springdev.library;
 import gerasimov.springdev.library.dao.BooksDAO;
 import gerasimov.springdev.library.model.Book;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class LibraryApplicationTests {
     @Autowired
     private DBUtils dbUtils;
 
+    @Before
+    public void clearDB(){
+        dbUtils.clearDB();
+    }
+
     @Test
     public void noAuthorGenresDuplicationTest() {
         String title = "title";
@@ -29,8 +35,6 @@ public class LibraryApplicationTests {
         String authorNew = "authorNew";
         String genre = "genre";
         String genreNew = "genreNew";
-
-        dbUtils.clearDB();
 
         booksDAO.addBook(title, author, genre);
         Assert.assertEquals(1, booksDAO.getAll().size());
@@ -51,7 +55,6 @@ public class LibraryApplicationTests {
 
     @Test
     public void consistentTest(){
-        dbUtils.clearDB();
         Assert.assertEquals(0, booksDAO.getAll().size());
         Assert.assertEquals(0, dbUtils.getKnownAuthors().size());
         Assert.assertEquals(0, dbUtils.getKnownGenres().size());
