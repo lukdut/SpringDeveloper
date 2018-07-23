@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -24,44 +25,44 @@ public class LibraryApplicationTests {
     private DBUtils dbUtils;
 
     @Before
-    public void clearDB(){
+    public void clearDB() {
         dbUtils.clearDB();
     }
 
     @Test
     public void noAuthorGenresDuplicationTest() {
         String title = "title";
-        String author = "author";
-        String authorNew = "authorNew";
-        String genre = "genre";
-        String genreNew = "genreNew";
+        List<String> author = Collections.singletonList("author");
+        List<String> genre = Collections.singletonList("genre");
+        List<String> authorNew = Collections.singletonList("authorNew");
+        List<String> genreNew = Collections.singletonList("genreNew");
 
         booksDAO.addBook(title, author, genre);
         Assert.assertEquals(1, booksDAO.getAll().size());
-        Assert.assertEquals(1, dbUtils.getKnownAuthors().size());
-        Assert.assertEquals(1, dbUtils.getKnownGenres().size());
+        Assert.assertEquals(1, booksDAO.getAuthors().size());
+        Assert.assertEquals(1, booksDAO.getGenres().size());
 
 
         booksDAO.addBook(title, authorNew, genre);
         Assert.assertEquals(2, booksDAO.getAll().size());
-        Assert.assertEquals(2, dbUtils.getKnownAuthors().size());
-        Assert.assertEquals(1, dbUtils.getKnownGenres().size());
+        Assert.assertEquals(2, booksDAO.getAuthors().size());
+        Assert.assertEquals(1, booksDAO.getGenres().size());
 
         booksDAO.addBook(title, author, genreNew);
         Assert.assertEquals(3, booksDAO.getAll().size());
-        Assert.assertEquals(2, dbUtils.getKnownAuthors().size());
-        Assert.assertEquals(2, dbUtils.getKnownGenres().size());
+        Assert.assertEquals(2, booksDAO.getAuthors().size());
+        Assert.assertEquals(2, booksDAO.getGenres().size());
     }
 
     @Test
-    public void consistentTest(){
+    public void consistentTest() {
         Assert.assertEquals(0, booksDAO.getAll().size());
-        Assert.assertEquals(0, dbUtils.getKnownAuthors().size());
-        Assert.assertEquals(0, dbUtils.getKnownGenres().size());
+        Assert.assertEquals(0, booksDAO.getAuthors().size());
+        Assert.assertEquals(0, booksDAO.getGenres().size());
 
         String title = "title";
-        String author = "author";
-        String genre = "genre";
+        List<String> author = Collections.singletonList("author");
+        List<String> genre = Collections.singletonList("genre");
 
         booksDAO.addBook(title, author, genre);
         final List<Book> books = booksDAO.getAll();
@@ -71,9 +72,9 @@ public class LibraryApplicationTests {
 
         Assert.assertEquals(title, book.getTitle());
         Assert.assertEquals(1, book.getAuthors().size());
-        Assert.assertEquals(author, book.getAuthors().get(0).getFullName());
+        Assert.assertEquals(author.get(0), book.getAuthors().get(0).getFullName());
         Assert.assertEquals(1, book.getGenres().size());
-        Assert.assertEquals(genre, book.getGenres().get(0).getName());
+        Assert.assertEquals(genre.get(0), book.getGenres().get(0).getName());
     }
 
 }
