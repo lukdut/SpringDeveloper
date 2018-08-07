@@ -26,28 +26,28 @@ public class JPABooksDao implements BooksDAO {
 
     @Override
     @Transactional
-    public void addBook(String title, List<String> authors, List<String> genres) {
-
-
+    public synchronized void addBook(String title, List<String> authors, List<String> genres) {
         final List<Author> authorsList = authors.stream()
-                .map(name -> {
-                    TypedQuery<Author> query = em.createQuery("SELECT a from Author a where a.fullName = :name", Author.class);
-                    query.setParameter("name", name);
-                    Author author;
-                    try {
-                        author = query.getSingleResult();
-                    } catch (NoResultException e) {
-                        author = new Author(name);
-                        em.persist(author);
-                    }
-                    return author;
-                }).collect(Collectors.toList());
-
-
-        /*final List<Genre> genresList = genres.stream()
+                .map(this::storeAuthor)
+                .collect(Collectors.toList());
+        final List<Genre> genresList = genres.stream()
                 .map(this::storeGenre)
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
+
+        TypedQuery<Book> query = em.createQuery("SELECT b from Book b where b.title = :title", Book.class);
+        query.setParameter("title", title);
+        List<Book> storedBooks = query.getResultList();
+        boolean alreadyExists = storedBooks.stream()
+                .anyMatch(storedBook ->
+                        storedBook.getAuthors().containsAll(authors) && authors.containsAll(storedBook.getAuthors())
+                                && storedBook.getGenres().containsAll(genres) && genres.containsAll(storedBook.getGenres()));
+        if (alreadyExists) {
+            System.out.println("book already exists!");
+        } else {
+            em.persist(new Book(title, authorsList, genresList));
+        }
     }
+
 
     @Override
     public List<Author> getAuthors() {
@@ -57,5 +57,31 @@ public class JPABooksDao implements BooksDAO {
     @Override
     public List<Genre> getGenres() {
         return null;
+    }
+
+    private synchronized Author storeAuthor(String name) {
+        TypedQuery<Author> query = em.createQuery("SELECT a from Author a where a.fullName = :name", Author.class);
+        query.setParameter("name", name);
+        Author author;
+        try {
+            author = query.getSingleResult();
+        } catch (NoResultException e) {
+            author = new Author(name);
+            em.persist(author);
+        }
+        return author;
+    }
+
+    private synchronized Genre storeGenre(String name) {
+        TypedQuery<Genre> query = em.createQuery("SELECT g from Genre g where g.name = :name", Genre.class);
+        query.setParameter("name", name);
+        Genre genre;
+        try {
+            genre = query.getSingleResult();
+        } catch (NoResultException e) {
+            genre = new Genre(name);
+            em.persist(genre);
+        }
+        return genre;
     }
 }

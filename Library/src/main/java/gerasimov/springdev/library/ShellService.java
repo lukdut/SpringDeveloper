@@ -24,6 +24,7 @@ public class ShellService {
     }
 
     @ShellMethod("Add new book")
+    @LogAfter("Book added")
     public void add(@ShellOption String title, @ShellOption String authors, @ShellOption String genres) {
         List<String> authorsList = Stream.of(authors.split(","))
                 .map(String::trim)
@@ -35,7 +36,6 @@ public class ShellService {
                 .collect(Collectors.toList());
 
         booksDAO.addBook(title, authorsList, genresList);
-        System.out.println("done");
     }
 
     @ShellMethod("List all known authors")

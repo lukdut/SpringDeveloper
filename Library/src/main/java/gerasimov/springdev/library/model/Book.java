@@ -3,7 +3,7 @@ package gerasimov.springdev.library.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,12 +11,22 @@ import java.util.UUID;
 public class Book {
     @Id
     @GeneratedValue
-    private final UUID id;
-    private final String title;
-    @OneToMany
-    private final List<Author> authors;
-    @OneToMany
-    private final List<Genre> genres;
+    private UUID id;
+    private String title;
+    @ManyToMany
+    private List<Author> authors;
+    @ManyToMany
+    private List<Genre> genres;
+
+    //For JPA
+    public Book() {
+    }
+
+    public Book(String title, List<Author> authors, List<Genre> genres) {
+        this.title = title.trim().toLowerCase();
+        this.authors = authors;
+        this.genres = genres;
+    }
 
     public Book(UUID id, String title, List<Author> authors, List<Genre> genres) {
         this.id = id;
