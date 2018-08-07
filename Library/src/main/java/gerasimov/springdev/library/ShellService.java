@@ -7,6 +7,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,6 +48,16 @@ public class ShellService {
     @ShellMethod("Add new genre")
     public void addGenre(@ShellOption String name) {
         Genre genre = repository.addGenre(name);
-        System.out.println("Genre " + genre.getName() + " id is:" + genre.getId());
+        System.out.println("Genre " + genre.getName() + " id is: " + genre.getId());
+    }
+
+    @ShellMethod("Find genre by name")
+    public void findGenre(@ShellOption String name) {
+        Optional<Genre> genre = repository.findGenre(name);
+        if (genre.isPresent()) {
+            System.out.println("Genre " + genre.get().getName() + " id is: " + genre.get().getId());
+        } else {
+            System.out.println("Genre " + name + " does not exists");
+        }
     }
 }

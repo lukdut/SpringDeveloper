@@ -22,15 +22,13 @@ public class JPALibraryRepository implements LibraryRepository {
     @Override
     @Transactional
     public synchronized Genre addGenre(String name) {
-        TypedQuery<Genre> query = em.createQuery("select a from Genre a where a.name = :name", Genre.class);
-        query.setParameter("name", name);
-        List<Genre> resultList = query.getResultList();
-        if (resultList.isEmpty()) {
-            Genre genre = new Genre(name);
+        Optional<Genre> foundGenre = findGenre(name);
+        if (foundGenre.isPresent()) {
+            return foundGenre.get();
+        } else {
+            Genre genre = new Genre(name.trim().toLowerCase());
             em.persist(genre);
             return genre;
-        } else {
-            return resultList.get(0);
         }
     }
 
@@ -51,7 +49,15 @@ public class JPALibraryRepository implements LibraryRepository {
 
     @Override
     public Optional<Genre> findGenre(String name) {
-        return Optional.empty();
+        String preparedName = name.trim().toLowerCase();
+        TypedQuery<Genre> query = em.createQuery("select a from Genre a where a.name = :name", Genre.class);
+        query.setParameter("name", preparedName);
+        List<Genre> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(resultList.get(0));
+        }
     }
 
     @Override
