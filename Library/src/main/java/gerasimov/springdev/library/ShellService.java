@@ -1,6 +1,7 @@
 package gerasimov.springdev.library;
 
-import gerasimov.springdev.library.dao.BooksDAO;
+import gerasimov.springdev.library.dao.LibraryRepository;
+import gerasimov.springdev.library.model.Genre;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -12,15 +13,15 @@ import java.util.stream.Stream;
 @ShellComponent
 public class ShellService {
 
-    private final BooksDAO booksDAO;
+    private final LibraryRepository repository;
 
-    ShellService(BooksDAO booksDAO) {
-        this.booksDAO = booksDAO;
+    ShellService(LibraryRepository repository) {
+        this.repository = repository;
     }
 
     @ShellMethod("List all known books")
     public void list() {
-        System.out.println(booksDAO.getAll());
+
     }
 
     @ShellMethod("Add new book")
@@ -35,11 +36,17 @@ public class ShellService {
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
 
-        booksDAO.addBook(title, authorsList, genresList);
+
     }
 
     @ShellMethod("List all known authors")
     public void authors() {
-        System.out.println(booksDAO.getAuthors());
+
+    }
+
+    @ShellMethod("Add new genre")
+    public void addGenre(@ShellOption String name) {
+        Genre genre = repository.addGenre(name);
+        System.out.println("Genre " + genre.getName() + " id is:" + genre.getId());
     }
 }

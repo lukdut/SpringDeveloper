@@ -5,12 +5,13 @@ import gerasimov.springdev.library.model.Author;
 import gerasimov.springdev.library.model.Book;
 import gerasimov.springdev.library.model.Genre;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//@Repository
+@Repository
 public class JdbcBooksDao implements BooksDAO {
     private static final Object AUTHORS_MONITOR = new Object();
     private static final Object GENRES_MONITOR = new Object();
