@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class JPALibraryRepository implements LibraryRepository {
@@ -33,24 +33,35 @@ public class JPALibraryRepository implements LibraryRepository {
     }
 
     @Override
-    public Author addAuthor(String name) {
-        return null;
-    }
-
-    @Override
-    public Book addBook(String title, List<UUID> authors, List<UUID> genres) {
-        return null;
+    @Transactional
+    public synchronized Author addAuthor(String name) {
+        Optional<Author> foundAuthor = findAuthor(name);
+        if (foundAuthor.isPresent()) {
+            return foundAuthor.get();
+        } else {
+            Author author = new Author(name.trim().toLowerCase());
+            em.persist(author);
+            return author;
+        }
     }
 
     @Override
     public Optional<Author> findAuthor(String name) {
-        return Optional.empty();
+        String preparedName = name.trim().toLowerCase();
+        TypedQuery<Author> query = em.createQuery("select a from Author a where a.fullName = :name", Author.class);
+        query.setParameter("name", preparedName);
+        List<Author> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(resultList.get(0));
+        }
     }
 
     @Override
     public Optional<Genre> findGenre(String name) {
         String preparedName = name.trim().toLowerCase();
-        TypedQuery<Genre> query = em.createQuery("select a from Genre a where a.name = :name", Genre.class);
+        TypedQuery<Genre> query = em.createQuery("select g from Genre g where g.name = :name", Genre.class);
         query.setParameter("name", preparedName);
         List<Genre> resultList = query.getResultList();
         if (resultList.isEmpty()) {
@@ -61,9 +72,37 @@ public class JPALibraryRepository implements LibraryRepository {
     }
 
     @Override
-    public Optional<List<Book>> findBooks(String title) {
-        return Optional.empty();
+    public List<Book> getAll() {
+        return em.createQuery("select b from Book b", Book.class).getResultList();
     }
 
+    @Override
+    @Transactional
+    public void addBook(String title, List<String> authors, List<String> genres) {
+        final List<Author> authorsList = authors.stream()
+                .map(this::addAuthor)
+                .collect(Collectors.toList());
+        final List<Genre> genresList = genres.stream()
+                .map(this::addGenre)
+                .collect(Collectors.toList());
+        em.persist(new Book(title, authorsList, genresList));
+    }
 
+    @Override
+    public List<Book> findBooks(String title) {
+        String preparedTitle = title.trim().toLowerCase();
+        TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
+        query.setParameter("title", preparedTitle);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Author> getAuthors() {
+        return em.createQuery("select x from Author x", Author.class).getResultList();
+    }
+
+    @Override
+    public List<Genre> getGenres() {
+        return em.createQuery("select x from Genre x", Genre.class).getResultList();
+    }
 }

@@ -1,13 +1,11 @@
 package gerasimov.springdev.library;
 
 import gerasimov.springdev.library.dao.LibraryRepository;
-import gerasimov.springdev.library.model.Genre;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +20,7 @@ public class ShellService {
 
     @ShellMethod("List all known books")
     public void list() {
-
+        System.out.println(repository.getAll());
     }
 
     @ShellMethod("Add new book")
@@ -37,27 +35,21 @@ public class ShellService {
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
 
-
+        repository.addBook(title, authorsList, genresList);
     }
 
-    @ShellMethod("List all known authors")
+    @ShellMethod("Find book by title")
+    public void find(@ShellOption String title) {
+        System.out.println(repository.findBooks(title));
+    }
+
+    @ShellMethod("Get all known authors")
     public void authors() {
-
+        System.out.println(repository.getAuthors());
     }
 
-    @ShellMethod("Add new genre")
-    public void addGenre(@ShellOption String name) {
-        Genre genre = repository.addGenre(name);
-        System.out.println("Genre " + genre.getName() + " id is: " + genre.getId());
-    }
-
-    @ShellMethod("Find genre by name")
-    public void findGenre(@ShellOption String name) {
-        Optional<Genre> genre = repository.findGenre(name);
-        if (genre.isPresent()) {
-            System.out.println("Genre " + genre.get().getName() + " id is: " + genre.get().getId());
-        } else {
-            System.out.println("Genre " + name + " does not exists");
-        }
+    @ShellMethod("Get all known genres")
+    public void genres() {
+        System.out.println(repository.getGenres());
     }
 }

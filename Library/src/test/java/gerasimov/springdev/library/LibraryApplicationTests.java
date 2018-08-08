@@ -3,11 +3,12 @@ package gerasimov.springdev.library;
 import gerasimov.springdev.library.dao.BooksDAO;
 import gerasimov.springdev.library.model.Book;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -17,19 +18,12 @@ import java.util.List;
 @SpringBootTest
 public class LibraryApplicationTests {
 
+    @Qualifier("JPALibraryRepository")
     @Autowired
     private BooksDAO booksDAO;
 
-
-    @Autowired
-    private DBUtils dbUtils;
-
-    @Before
-    public void clearDB() {
-        dbUtils.clearDB();
-    }
-
     @Test
+    @DirtiesContext
     public void noAuthorGenresDuplicationTest() {
         String title = "title";
         List<String> author = Collections.singletonList("author");
@@ -55,6 +49,7 @@ public class LibraryApplicationTests {
     }
 
     @Test
+    @DirtiesContext
     public void consistentTest() {
         Assert.assertEquals(0, booksDAO.getAll().size());
         Assert.assertEquals(0, booksDAO.getAuthors().size());

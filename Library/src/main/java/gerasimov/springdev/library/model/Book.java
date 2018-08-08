@@ -1,9 +1,9 @@
 package gerasimov.springdev.library.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,9 +13,10 @@ public class Book {
     @GeneratedValue
     private UUID id;
     private String title;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Author> authors;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Genre> genres;
 
     //For JPA
