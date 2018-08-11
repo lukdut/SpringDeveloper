@@ -2,6 +2,7 @@ package gerasimov.springdev.library.dao;
 
 import gerasimov.springdev.library.model.Author;
 import gerasimov.springdev.library.model.Book;
+import gerasimov.springdev.library.model.Comment;
 import gerasimov.springdev.library.model.Genre;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
@@ -94,6 +96,16 @@ public class JPALibraryRepository implements LibraryRepository {
         TypedQuery<Book> query = em.createQuery("select b from Book b where b.title = :title", Book.class);
         query.setParameter("title", preparedTitle);
         return query.getResultList();
+    }
+
+    @Override
+    @Transactional
+    public void addComment(UUID bokId, String commentString) {
+        Book book = em.find(Book.class, bokId);
+        Comment comment = new Comment(commentString);
+        em.persist(comment);
+        book.addComment(comment);
+        em.persist(book);
     }
 
     @Override

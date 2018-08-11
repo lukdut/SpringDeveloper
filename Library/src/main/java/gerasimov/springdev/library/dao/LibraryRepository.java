@@ -7,6 +7,7 @@ import gerasimov.springdev.library.model.Genre;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface LibraryRepository extends BooksDAO {
     Genre addGenre(String name);
@@ -20,4 +21,6 @@ public interface LibraryRepository extends BooksDAO {
     Optional<Genre> findGenre(String name);
 
     List<Book> findBooks(String title);
+
+    void addComment(UUID bokId, String comment);
 }

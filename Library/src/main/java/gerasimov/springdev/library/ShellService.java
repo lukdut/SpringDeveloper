@@ -6,6 +6,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,5 +52,12 @@ public class ShellService {
     @ShellMethod("Get all known genres")
     public void genres() {
         System.out.println(repository.getGenres());
+    }
+
+    @ShellMethod("Add comment for book by ID")
+    @LogAfter("Comment added")
+    public void comment(@ShellOption String comment, @ShellOption String id) {
+        UUID uuid = UUID.fromString(id);
+        repository.addComment(uuid, comment);
     }
 }
