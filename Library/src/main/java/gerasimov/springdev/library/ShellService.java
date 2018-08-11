@@ -1,6 +1,7 @@
 package gerasimov.springdev.library;
 
 import gerasimov.springdev.library.dao.LibraryRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -15,7 +16,7 @@ public class ShellService {
 
     private final LibraryRepository repository;
 
-    ShellService(LibraryRepository repository) {
+    ShellService(@Qualifier("DATALibraryRepository") LibraryRepository repository) {
         this.repository = repository;
     }
 
