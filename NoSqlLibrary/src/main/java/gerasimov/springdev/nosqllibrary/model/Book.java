@@ -3,10 +3,7 @@ package gerasimov.springdev.nosqllibrary.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Document
 public class Book {
@@ -14,9 +11,9 @@ public class Book {
     private String id;
 
     private String title;
-    private Set<String> commentIds = new HashSet<>();
-    private List<Genre> genres;
-    private Set<String> authorIds;
+    private List<String> comments = new ArrayList<>();
+    private Set<String> genresIds = new HashSet<>();
+    private Set<String> authorIds = new HashSet<>();
 
     public Book(String title) {
         this.title = title;
@@ -35,7 +32,19 @@ public class Book {
     }
 
     public void addComment(String commentId) {
-        commentIds.add(commentId);
+        comments.add(commentId);
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public Set<String> getGenresIds() {
+        return genresIds;
+    }
+
+    public void setGenresIds(Set<String> genresIds) {
+        this.genresIds = genresIds;
     }
 
     @Override

@@ -2,8 +2,14 @@ package gerasimov.springdev.nosqllibrary.facade;
 
 import gerasimov.springdev.nosqllibrary.model.Author;
 import gerasimov.springdev.nosqllibrary.model.Book;
+import gerasimov.springdev.nosqllibrary.model.Genre;
 import gerasimov.springdev.nosqllibrary.repository.AuthorRepository;
 import gerasimov.springdev.nosqllibrary.repository.BookRepository;
+import gerasimov.springdev.nosqllibrary.repository.GenresRepository;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,12 +22,18 @@ public class MongoLibraryFacade implements LibraryFacade {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final GenresRepository genresRepository;
+    private final MongoTemplate mongoTemplate;
 
     public MongoLibraryFacade(
             BookRepository bookRepository,
-            AuthorRepository authorRepository) {
+            AuthorRepository authorRepository,
+            GenresRepository genresRepository,
+            MongoTemplate mongoTemplate) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
+        this.genresRepository = genresRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -45,8 +57,24 @@ public class MongoLibraryFacade implements LibraryFacade {
         if (existedBook.isPresent() && existedBook.get().getAuthorIds().equals(authorsId)) {
             System.out.println("Book already exists");
         } else {
+
+            Set<String> genreIds = genres.stream()
+                    .map(name -> {
+                        Optional<Genre> found = genresRepository.findByNameIgnoreCase(name);
+                        if (found.isPresent()) {
+                            return found.get();
+                        } else {
+                            Genre genre = new Genre(name);
+                            genresRepository.save(genre);
+                            return genre;
+                        }
+                    })
+                    .map(Genre::getId)
+                    .collect(Collectors.toSet());
+
             Book book = new Book(title.trim());
             book.setAuthorIds(authorsId);
+            book.setGenresIds(genreIds);
             bookRepository.insert(book);
         }
     }
@@ -58,28 +86,45 @@ public class MongoLibraryFacade implements LibraryFacade {
 
     @Override
     public void commentBook(String bookId, String text) {
-        bookRepository.findById(bookId).ifPresent(book -> {
-            // book.
-            //TODO
-        });
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(bookId));
+        Update update = new Update();
+        update.addToSet("comments", text);
+        mongoTemplate.updateFirst(query, update, Book.class);
     }
 
     @Override
     public String showBookInfo(String bookId) {
-        //TODO
-        return null;
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
+            return getBookShortInfo(book) + "\n"
+                    + String.join("\n", book.getComments());
+        } else {
+            System.out.println("Can not find book with id " + bookId);
+            return "";
+        }
     }
 
     private String booksToString(List<Book> books) {
         return books.stream()
-                .map(book -> {
-                    String authors = book.getAuthorIds().stream()
-                            .map(authorRepository::findById)
-                            .map(Optional::get)
-                            .map(Author::getFullName)
-                            .collect(Collectors.joining(", "));
+                .map(this::getBookShortInfo)
+                .collect(Collectors.joining("\n"));
+    }
 
-                    return book.getTitle() + " (" + authors + ") " + book.getId();
-                }).collect(Collectors.joining("; "));
+    private String getBookShortInfo(Book book) {
+        String authors = book.getAuthorIds().stream()
+                .map(authorRepository::findById)
+                .map(Optional::get)
+                .map(Author::getFullName)
+                .collect(Collectors.joining(", "));
+
+        String genres = book.getGenresIds().stream()
+                .map(genresRepository::findById)
+                .map(Optional::get)
+                .map(Genre::getName)
+                .collect(Collectors.joining(", "));
+
+        return book.getTitle() + " (" + authors + "), [" + genres + "] " + book.getId();
     }
 }

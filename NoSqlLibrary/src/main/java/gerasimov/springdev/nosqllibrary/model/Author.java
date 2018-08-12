@@ -4,7 +4,6 @@ package gerasimov.springdev.nosqllibrary.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.Objects;
 
 @Document
@@ -13,7 +12,6 @@ public class Author {
     private String id;
 
     private String fullName;
-    private List<Comment> comments;
 
     public Author(String fullName) {
         this.fullName = fullName;
