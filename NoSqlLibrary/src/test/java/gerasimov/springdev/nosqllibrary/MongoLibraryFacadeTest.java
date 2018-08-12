@@ -9,6 +9,8 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,9 +31,12 @@ public class MongoLibraryFacadeTest {
     LibraryFacade libraryFacade;
 
     @Test
+    @Ignore
     public void test() {
-        System.out.println("!!!!!!!!!!!!!");
-        libraryFacade.findBook("asda");
+        Assert.assertTrue(libraryFacade.findBook("none").length() < 5);
+        libraryFacade.addBook("book", Collections.singletonList("author"), Collections.singletonList("genre"));
+        Assert.assertTrue(libraryFacade.findBook("book").contains("author"));
+        Assert.assertTrue(libraryFacade.showBookInfo("book").contains("genre"));
     }
 
     @Configuration
@@ -45,9 +51,9 @@ public class MongoLibraryFacadeTest {
 
             MongodStarter starter = MongodStarter.getDefaultInstance();
             MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
+            //Caused by: java.io.IOException: Could not start process: <EOF>
             mongodExecutable.start();
             return new MongoTemplate(new MongoClient(ip, port), "test");
-
         }
     }
 }
