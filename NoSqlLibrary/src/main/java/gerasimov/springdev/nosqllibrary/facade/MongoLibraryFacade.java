@@ -37,6 +37,8 @@ public class MongoLibraryFacade implements LibraryFacade {
     }
 
     @Override
+    //synchronized тк можно получить дубликат при попытке создать одновременно одинаковую книгу
+    //(одинаковые авторы и название)
     public synchronized void addBook(String title, List<String> authors, List<String> genres) {
         Optional<Book> existedBook = bookRepository.findByTitleIgnoreCase(title);
 
@@ -57,7 +59,6 @@ public class MongoLibraryFacade implements LibraryFacade {
         if (existedBook.isPresent() && existedBook.get().getAuthorIds().equals(authorsId)) {
             System.out.println("Book already exists");
         } else {
-
             Set<String> genreIds = genres.stream()
                     .map(name -> {
                         Optional<Genre> found = genresRepository.findByNameIgnoreCase(name);

@@ -1,59 +1,57 @@
 package gerasimov.springdev.nosqllibrary;
 
-import com.mongodb.MongoClient;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
+import gerasimov.springdev.nosqllibrary.facade.MongoLibraryFacade;
+import gerasimov.springdev.nosqllibrary.repository.AuthorRepository;
+import gerasimov.springdev.nosqllibrary.repository.BookRepository;
+import gerasimov.springdev.nosqllibrary.repository.GenresRepository;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.Collections;
+
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+/*  При попытке заавтовайрить LibraryFacade тест "зависал" гдето на создании контекста
+    и до самого метода test выполнение не доходило. Поэтому добавил аннотацию DataMongoTest,
+    дабы создались только репозитории и из них сконстрактил LibraryFacade
+ */
+@DataMongoTest
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 public class MongoLibraryFacadeTest {
 
     @Autowired
-    LibraryFacade libraryFacade;
+    MongoTemplate mongoTemplate;
+
+    @Autowired
+    AuthorRepository authorRepository;
+
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    GenresRepository genresRepository;
 
     @Test
-    @Ignore
     public void test() {
+        LibraryFacade libraryFacade = new MongoLibraryFacade(bookRepository, authorRepository, genresRepository, mongoTemplate);
         Assert.assertTrue(libraryFacade.findBook("none").length() < 5);
         libraryFacade.addBook("book", Collections.singletonList("author"), Collections.singletonList("genre"));
-        Assert.assertTrue(libraryFacade.findBook("book").contains("author"));
-        Assert.assertTrue(libraryFacade.showBookInfo("book").contains("genre"));
-    }
-
-    @Configuration
-    static class SpringTestConfiguration {
-        @Bean
-        public MongoTemplate mongoTemplate() throws IOException {
-            String ip = "localhost";
-            int port = 27017;
-
-            IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
-                    .net(new Net(ip, port, Network.localhostIsIPv6())).build();
-
-            MongodStarter starter = MongodStarter.getDefaultInstance();
-            MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
-            //Caused by: java.io.IOException: Could not start process: <EOF>
-            mongodExecutable.start();
-            return new MongoTemplate(new MongoClient(ip, port), "test");
-        }
+        String bookSummary = libraryFacade.findBook("book");
+        Assert.assertTrue(bookSummary.contains("author"));
+        String bookId = bookSummary.substring(bookSummary.lastIndexOf(" ") + 1);
+        Assert.assertTrue(libraryFacade.showBookInfo(bookId).contains("genre"));
+        Assert.assertFalse(libraryFacade.showBookInfo(bookId).contains("commentaryTest"));
+        libraryFacade.commentBook(bookId, "commentaryTest");
+        Assert.assertTrue(libraryFacade.showBookInfo(bookId).contains("commentaryTest"));
     }
 }
