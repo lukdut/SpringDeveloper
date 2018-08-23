@@ -107,6 +107,11 @@ public class MongoLibraryFacade implements LibraryFacade {
         }
     }
 
+    @Override
+    public List<Book> allBooks() {
+        return bookRepository.findAll();
+    }
+
     private String booksToString(List<Book> books) {
         return books.stream()
                 .map(this::getBookShortInfo)

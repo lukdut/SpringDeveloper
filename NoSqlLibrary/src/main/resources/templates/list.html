@@ -16,10 +16,10 @@
     </tr>
     </thead>
     <tbody>
-    <li th:each="person : ${persons}">
-        <tr th:object="${person}">
+    <li th:each="book : ${books}">
+        <tr th:object="${book}">
             <td th:text="*{id}">1</td>
-            <td th:text="*{name}">John Doe</td>
+            <td th:text="*{title}">John Doe</td>
             <td>
                 <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Edit</a>
             </td>
