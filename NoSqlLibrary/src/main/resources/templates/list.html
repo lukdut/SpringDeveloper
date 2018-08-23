@@ -16,7 +16,7 @@
     </tr>
     </thead>
     <tbody>
-    <li th:each="book : ${books}">
+    <th:block th:each="book : ${books}">
         <tr th:object="${book}">
             <td th:text="*{id}">1</td>
             <td th:text="*{title}">John Doe</td>
@@ -24,7 +24,7 @@
                 <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Edit</a>
             </td>
         </tr>
-    </li>
+    </th:block>
 
     </tbody>
 </table>
