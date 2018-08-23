@@ -17,14 +17,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class DATALibraryRepository implements LibraryRepository {
+public class DataLibraryRepository implements LibraryRepository {
 
     private final AuthorsRepository authorsRepository;
     private final GenresRepository genresRepository;
     private final BooksRepository booksRepository;
     private final CommentRepository commentRepository;
 
-    public DATALibraryRepository(
+    public DataLibraryRepository(
             AuthorsRepository authorsRepository,
             GenresRepository genresRepository,
             BooksRepository booksRepository,

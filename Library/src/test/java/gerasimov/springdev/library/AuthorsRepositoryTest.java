@@ -20,9 +20,10 @@ public class AuthorsRepositoryTest {
 
     @Test
     public void test() {
+        int sizeBefore = authorsRepository.findAll().size();
         authorsRepository.save(new Author("name1"));
         authorsRepository.save(new Author("name2"));
-        Assert.assertEquals(2, authorsRepository.findAll().size());
+        Assert.assertEquals(2, authorsRepository.findAll().size() - sizeBefore);
         Assert.assertTrue(authorsRepository.findAuthorByFullName("name1").isPresent());
         Assert.assertEquals("name1", authorsRepository.findAuthorByFullName("name1").get().getFullName());
         Assert.assertFalse(authorsRepository.findAuthorByFullName("name3").isPresent());

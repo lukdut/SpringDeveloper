@@ -16,7 +16,7 @@ public class ShellService {
 
     private final LibraryRepository repository;
 
-    ShellService(@Qualifier("DATALibraryRepository") LibraryRepository repository) {
+    ShellService(@Qualifier("DataLibraryRepository") LibraryRepository repository) {
         this.repository = repository;
     }
 
