@@ -1,29 +1,31 @@
 package gerasimov.springdev.library;
 
-import gerasimov.springdev.library.dao.BooksDAO;
+import gerasimov.springdev.library.dao.LibraryRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ShellComponent
 public class ShellService {
 
-    private final BooksDAO booksDAO;
+    private final LibraryRepository repository;
 
-    ShellService(BooksDAO booksDAO) {
-        this.booksDAO = booksDAO;
+    ShellService(LibraryRepository repository) {
+        this.repository = repository;
     }
 
     @ShellMethod("List all known books")
     public void list() {
-        System.out.println(booksDAO.getAll());
+        System.out.println(repository.getAll());
     }
 
     @ShellMethod("Add new book")
+    @LogAfter("Book added")
     public void add(@ShellOption String title, @ShellOption String authors, @ShellOption String genres) {
         List<String> authorsList = Stream.of(authors.split(","))
                 .map(String::trim)
@@ -34,12 +36,28 @@ public class ShellService {
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
 
-        booksDAO.addBook(title, authorsList, genresList);
-        System.out.println("done");
+        repository.addBook(title, authorsList, genresList);
     }
 
-    @ShellMethod("List all known authors")
+    @ShellMethod("Find book by title")
+    public void find(@ShellOption String title) {
+        System.out.println(repository.findBooks(title));
+    }
+
+    @ShellMethod("Get all known authors")
     public void authors() {
-        System.out.println(booksDAO.getAuthors());
+        System.out.println(repository.getAuthors());
+    }
+
+    @ShellMethod("Get all known genres")
+    public void genres() {
+        System.out.println(repository.getGenres());
+    }
+
+    @ShellMethod("Add comment for book by ID")
+    @LogAfter("Comment added")
+    public void comment(@ShellOption String comment, @ShellOption String id) {
+        UUID uuid = UUID.fromString(id);
+        repository.addComment(uuid, comment);
     }
 }

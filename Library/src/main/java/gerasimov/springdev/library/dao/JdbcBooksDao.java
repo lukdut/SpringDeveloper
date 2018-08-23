@@ -1,5 +1,6 @@
 package gerasimov.springdev.library.dao;
 
+import gerasimov.springdev.library.LogAfter;
 import gerasimov.springdev.library.model.Author;
 import gerasimov.springdev.library.model.Book;
 import gerasimov.springdev.library.model.Genre;
@@ -22,6 +23,7 @@ public class JdbcBooksDao implements BooksDAO {
     }
 
     @Override
+    @LogAfter("book list obtained")
     public List<Book> getAll() {
         List<UUID[]> mapRows = jdbc.query("Select * from GENRES_BOOKS", (rs, i) -> {
             UUID uuids[] = new UUID[2];
