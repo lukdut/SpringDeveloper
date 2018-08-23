@@ -31,7 +31,8 @@
     </build>
     <modules>
         <module>StudentsTest</module>
-        <module>library</module>
+        <module>Library</module>
+        <module>NoSqlLibrary</module>
     </modules>
 
     <dependencyManagement>
