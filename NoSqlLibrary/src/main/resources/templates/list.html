@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+
+<body>
+<h1>Books:</h1>
+<table class="persons">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <li th:each="person : ${persons}">
+        <tr th:object="${person}">
+            <td th:text="*{id}">1</td>
+            <td th:text="*{name}">John Doe</td>
+            <td>
+                <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Edit</a>
+            </td>
+        </tr>
+    </li>
+
+    </tbody>
+</table>
+
+</body>
+</html>
