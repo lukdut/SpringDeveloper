@@ -16,10 +16,10 @@ public class Book {
 
     private String title;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Author> authors;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Genre> genres;
 
@@ -58,6 +58,10 @@ public class Book {
 
     public UUID getId() {
         return id;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     @Override
