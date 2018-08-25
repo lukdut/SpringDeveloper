@@ -104,6 +104,26 @@ public class MongoLibraryFacade implements LibraryFacade {
         return bookRepository.findAll();
     }
 
+    @Override
+    public void deleteBook(String id) {
+        bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Author> getAuthor(String id) {
+        return authorRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Genre> getGenre(String id) {
+        return genresRepository.findById(id);
+    }
+
+    @Override
+    public void updateBook(Book book) {
+        bookRepository.save(book);
+    }
+
     private String booksToString(List<Book> books) {
         return books.stream()
                 .map(this::getBookShortInfo)

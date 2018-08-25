@@ -21,11 +21,14 @@
             <td>
                 <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Show</a>
             </td>
+            <td>
+                <a href="list.html" th:href="@{/delete/{id}(id=*{id})}">Delete</a>
+            </td>
         </tr>
     </th:block>
     </tbody>
 </table>
-
-<a href="edit.html" th:href="@{/edit}">Add</a>
+<br/>
+<a href="edit.html" th:href="@{/edit}">Add new book</a>
 </body>
 </html>
