@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class LibController {
@@ -38,16 +36,7 @@ public class LibController {
         } else {
             Optional<Book> foundBook = libraryFacade.showBookInfo(id);
             if (foundBook.isPresent()) {
-                Book book = foundBook.get();
-                model.addAttribute("book", book);
-                model.addAttribute("authors", book.getAuthorIds().stream()
-                        .map(libraryFacade::getAuthor)
-                        .flatMap(author -> author.map(Stream::of).orElseGet(Stream::empty))
-                        .collect(Collectors.toList()));
-                model.addAttribute("genres", book.getGenresIds().stream()
-                        .map(libraryFacade::getGenre)
-                        .flatMap(genre -> genre.map(Stream::of).orElseGet(Stream::empty))
-                        .collect(Collectors.toList()));
+                model.addAttribute("book", foundBook.get());
                 return "edit";
             }
             return "404";

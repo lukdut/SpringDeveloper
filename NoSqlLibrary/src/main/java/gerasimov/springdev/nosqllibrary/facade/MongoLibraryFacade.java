@@ -110,16 +110,6 @@ public class MongoLibraryFacade implements LibraryFacade {
     }
 
     @Override
-    public Optional<Author> getAuthor(String id) {
-        return authorRepository.findById(id);
-    }
-
-    @Override
-    public Optional<Genre> getGenre(String id) {
-        return genresRepository.findById(id);
-    }
-
-    @Override
     public void updateBook(Book book) {
         bookRepository.save(book);
     }
