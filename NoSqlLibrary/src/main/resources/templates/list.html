@@ -10,24 +10,22 @@
 <table class="persons">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
+        <th>Title</th>
         <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <th:block th:each="book : ${books}">
         <tr th:object="${book}">
-            <td th:text="*{id}">1</td>
-            <td th:text="*{title}">John Doe</td>
+            <td th:text="*{title}">Spring in Action</td>
             <td>
-                <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Edit</a>
+                <a href="edit.html" th:href="@{/edit/{id}(id=*{id})}">Show</a>
             </td>
         </tr>
     </th:block>
-
     </tbody>
 </table>
 
+<a href="edit.html" th:href="@{/edit}">Add</a>
 </body>
 </html>

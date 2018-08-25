@@ -15,6 +15,9 @@ public class Book {
     private Set<String> genresIds = new HashSet<>();
     private Set<String> authorIds = new HashSet<>();
 
+    public Book() {
+    }
+
     public Book(String title) {
         this.title = title;
     }
@@ -45,6 +48,10 @@ public class Book {
 
     public void setGenresIds(Set<String> genresIds) {
         this.genresIds = genresIds;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

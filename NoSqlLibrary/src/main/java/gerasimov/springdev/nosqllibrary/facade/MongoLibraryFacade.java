@@ -95,16 +95,8 @@ public class MongoLibraryFacade implements LibraryFacade {
     }
 
     @Override
-    public String showBookInfo(String bookId) {
-        Optional<Book> optionalBook = bookRepository.findById(bookId);
-        if (optionalBook.isPresent()) {
-            Book book = optionalBook.get();
-            return getBookShortInfo(book) + "\n"
-                    + String.join("\n", book.getComments());
-        } else {
-            System.out.println("Can not find book with id " + bookId);
-            return "";
-        }
+    public Optional<Book> showBookInfo(String bookId) {
+        return bookRepository.findById(bookId);
     }
 
     @Override

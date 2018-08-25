@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+</head>
+<body>
+<form class="form-group" action="/edit" th:action="@{/edit}" method="post">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" th:field="${book.title}"/>
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea id="content" th:field="${book.comments}"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+</body>
+</html>
