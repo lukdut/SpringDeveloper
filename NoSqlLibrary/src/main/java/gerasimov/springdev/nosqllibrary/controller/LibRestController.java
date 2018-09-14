@@ -14,7 +14,7 @@ public class LibRestController {
         this.libraryFacade = libraryFacade;
     }
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public List<Book> list() {
         return libraryFacade.allBooks();
     }
@@ -25,7 +25,7 @@ public class LibRestController {
         libraryFacade.addBook(book);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/del")
     public void del(@RequestParam String id){
         System.out.println("deleting book with id=" + id);
         libraryFacade.deleteBook(id);
