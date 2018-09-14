@@ -114,6 +114,11 @@ public class MongoLibraryFacade implements LibraryFacade {
         bookRepository.save(book);
     }
 
+    @Override
+    public void addBook(Book book) {
+        bookRepository.save(book);
+    }
+
     private String booksToString(List<Book> books) {
         return books.stream()
                 .map(this::getBookShortInfo)
