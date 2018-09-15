@@ -21,5 +21,5 @@ public interface LibraryFacade {
 
     void updateBook(Book book);
 
-    void addBook(Book book);
+    String addBook(Book book);
 }

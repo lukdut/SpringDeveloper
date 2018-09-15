@@ -20,9 +20,9 @@ public class LibRestController {
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody Book book){
+    public String add(@RequestBody Book book) {
         System.out.println("adding book: " + book);
-        libraryFacade.addBook(book);
+        return libraryFacade.addBook(book);
     }
 
     @DeleteMapping("/del")

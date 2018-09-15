@@ -25,12 +25,47 @@
                             '<tr id=' + value.id + '>' +
                             '<td>' + value.id + '</td> ' +
                             '<td>' + value.title + '</td> ' +
-                            '<td><div class="delete" id=' + value.id + '>Delete</div></td>' +
-                            '<td><div>Edit</div></td>' +
+                            '<td><button class="delete" id=' + value.id + '>Delete</button></td>' +
+                            '<td>Edit</td>' +
                             '</tr>');
                     });
 
-                    $("div.delete").click(function () {
+                    $("button.add").click(function () {
+                        var title = $("#title").val();
+                        console.log("Adding new book: " + title);
+                        if (title) {
+                            $.ajax({
+                                url: "/add",
+                                type: "POST",
+                                data: '{"title":"' + title + '"}',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "text",
+                                success: function (data, textStatus, jqXHR) {
+                                    $("table.books").append(
+                                        '<tr id=' + data + '>' +
+                                        '<td>' + data + '</td> ' +
+                                        '<td>' + title + '</td> ' +
+                                        '<td><button class="delete" id=' + data + '>Delete</button></td>' +
+                                        '<td>Edit</td>' +
+                                        '</tr>');
+
+                                    $(".delete").click(function () {
+                                        $('#' + this.id).hide();
+                                        $.ajax({
+                                                url: "/del?id=" + this.id,
+                                                type: 'DELETE'
+                                            }
+                                        );
+                                    })
+                                },
+                                error: function (data, textStatus, jqXHR) {
+                                    alert("failed to add book " + title);
+                                }
+                            });
+                        }
+                    });
+
+                    $(".delete").click(function () {
                         $('#' + this.id).hide();
                         $.ajax({
                                 url: "/del?id=" + this.id,
@@ -56,6 +91,7 @@
     <tbody>
     </tbody>
 </table>
-
+<label for="title">New: </label><input type="text" id="title"/>
+<button class="add">Add</button>
 </body>
 </html>
