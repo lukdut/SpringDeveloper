@@ -22,16 +22,21 @@
                 success: function (result) {
                     $(result).each(function (key, value) {
                         $("table.books").append(
-                                '<tr id=' + value.id + '>' +
-                                '<td>' + value.id + '</td> ' +
-                                '<td>' + value.title + '</td> ' +
-                                '<td><div class="delete" id=' + value.id + '>Delete</div></td>' +
-                                '<td><div>Edit</div></td>' +
-                                '</tr>');
+                            '<tr id=' + value.id + '>' +
+                            '<td>' + value.id + '</td> ' +
+                            '<td>' + value.title + '</td> ' +
+                            '<td><div class="delete" id=' + value.id + '>Delete</div></td>' +
+                            '<td><div>Edit</div></td>' +
+                            '</tr>');
                     });
 
                     $("div.delete").click(function () {
-                        $('#'+ this.id).hide();
+                        $('#' + this.id).hide();
+                        $.ajax({
+                                url: "/del?id=" + this.id,
+                                type: 'DELETE'
+                            }
+                        );
                     })
                 }
             })
