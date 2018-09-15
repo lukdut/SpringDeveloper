@@ -30,4 +30,10 @@ public class LibRestController {
         System.out.println("deleting book with id=" + id);
         libraryFacade.deleteBook(id);
     }
+
+    @PutMapping("/upd")
+    public void update(@RequestBody Book book) {
+        System.out.println("Updating book " + book);
+        libraryFacade.updateBook(book);
+    }
 }

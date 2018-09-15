@@ -16,18 +16,72 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
+        function addRow(bookId, bookTitle) {
+            $("table.books").append(
+                '<tr id=' + bookId + '>' +
+                '<td>' + bookId + '</td> ' +
+                '<td><div class="title" id=' + bookId + '>' + bookTitle + '</div><input hidden=true type="text" class="newTitle" id=' + bookId + ' value="' + bookTitle + '"></td> ' +
+                '<td><button class="edit" id=' + bookId + '>Edit</button><button class="save" hidden=true id=' + bookId + '>Save</button></td>' +
+                '<td><button class="delete" id=' + bookId + '>Delete</button></td>' +
+                '</tr>');
+        }
+
+        function addDeleteCallback() {
+            $(".delete").click(function () {
+                $('#' + this.id).hide();
+                $.ajax({
+                        url: "/del?id=" + this.id,
+                        type: 'DELETE'
+                    }
+                );
+            })
+        }
+
+        function addEditCallback() {
+            $(".edit").click(function () {
+                $(this).hide();
+                $('#' + this.id + ".save").show();
+                $('#' + this.id + ".title").hide();
+                $('#' + this.id + ".newTitle").show();
+            });
+
+            $(".save").click(function () {
+                $(this).hide();
+                var newTitleField = $('#' + this.id + ".newTitle");
+                var titleField = $('#' + this.id + ".title");
+                $('#' + this.id + ".edit").show();
+                var title = titleField.text();
+                var newTitle = newTitleField.val();
+                newTitleField.hide();
+                titleField.show();
+
+                if (newTitle !== title) {
+                    console.log("replacing title " + title + " to " + newTitle);
+                    $.ajax({
+                        url: "/upd",
+                        type: "PUT",
+                        data: '{"id":"' + this.id + '", "title":"' + newTitle + '"}',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function (data, textStatus, jqXHR) {
+                            titleField.text(newTitle);
+                            newTitleField.val(newTitle);
+                        },
+                        error: function (data, textStatus, jqXHR) {
+                            alert("failed to update book " + newTitle);
+                            newTitleField.val(title);
+                        }
+                    });
+                }
+            });
+        }
+
         $(function () {
             $.ajax({
                 url: "/list",
                 success: function (result) {
                     $(result).each(function (key, value) {
-                        $("table.books").append(
-                            '<tr id=' + value.id + '>' +
-                            '<td>' + value.id + '</td> ' +
-                            '<td>' + value.title + '</td> ' +
-                            '<td><button class="delete" id=' + value.id + '>Delete</button></td>' +
-                            '<td>Edit</td>' +
-                            '</tr>');
+                        addRow(value.id, value.title);
                     });
 
                     $("button.add").click(function () {
@@ -41,22 +95,9 @@
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "text",
                                 success: function (data, textStatus, jqXHR) {
-                                    $("table.books").append(
-                                        '<tr id=' + data + '>' +
-                                        '<td>' + data + '</td> ' +
-                                        '<td>' + title + '</td> ' +
-                                        '<td><button class="delete" id=' + data + '>Delete</button></td>' +
-                                        '<td>Edit</td>' +
-                                        '</tr>');
-
-                                    $(".delete").click(function () {
-                                        $('#' + this.id).hide();
-                                        $.ajax({
-                                                url: "/del?id=" + this.id,
-                                                type: 'DELETE'
-                                            }
-                                        );
-                                    })
+                                    addRow(data, title);
+                                    addDeleteCallback();
+                                    addEditCallback();
                                 },
                                 error: function (data, textStatus, jqXHR) {
                                     alert("failed to add book " + title);
@@ -65,14 +106,8 @@
                         }
                     });
 
-                    $(".delete").click(function () {
-                        $('#' + this.id).hide();
-                        $.ajax({
-                                url: "/del?id=" + this.id,
-                                type: 'DELETE'
-                            }
-                        );
-                    })
+                    addDeleteCallback();
+                    addEditCallback();
                 }
             })
         });
