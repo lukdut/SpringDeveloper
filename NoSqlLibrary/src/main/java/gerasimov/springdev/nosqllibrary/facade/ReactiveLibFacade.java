@@ -2,13 +2,14 @@ package gerasimov.springdev.nosqllibrary.facade;
 
 import gerasimov.springdev.nosqllibrary.model.Book;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ReactiveLibFacade {
     Flux<Book> allBooks();
 
-    Flux<String> addBook(Book book);
+    Mono<String> addBook(Book book);
 
-    Flux<Void> deleteBook(String id);
+    Mono<Void> deleteBook(String id);
 
-    Flux<Void> updateBook(Book book);
+    Mono<Void> updateBook(Book book);
 }

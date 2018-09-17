@@ -4,6 +4,7 @@ import gerasimov.springdev.nosqllibrary.facade.ReactiveLibFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class LibRestController {
@@ -19,19 +20,19 @@ public class LibRestController {
     }
 
     @PostMapping("/add")
-    public Flux<String> add(@RequestBody Book book) {
+    public Mono<String> add(@RequestBody Book book) {
         System.out.println("adding book: " + book);
         return libraryFacade.addBook(book);
     }
 
     @DeleteMapping("/del")
-    public Flux<Void> del(@RequestParam String id) {
+    public Mono<Void> del(@RequestParam String id) {
         System.out.println("deleting book with id=" + id);
         return libraryFacade.deleteBook(id);
     }
 
     @PutMapping("/upd")
-    public Flux<Void> update(@RequestBody Book book) {
+    public Mono<Void> update(@RequestBody Book book) {
         System.out.println("Updating book " + book);
         return libraryFacade.updateBook(book);
     }

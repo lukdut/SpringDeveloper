@@ -4,6 +4,7 @@ import gerasimov.springdev.nosqllibrary.model.Book;
 import gerasimov.springdev.nosqllibrary.repository.reactive.ReactiveBookRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 @Service
@@ -21,17 +22,17 @@ public class ReactiveMongoFacade implements ReactiveLibFacade {
     }
 
     @Override
-    public Flux<String> addBook(Book book) {
-        return null;
+    public Mono<String> addBook(Book book) {
+        return bookRepository.save(book).map(book1 -> book.getId());
     }
 
     @Override
-    public Flux<Void> deleteBook(String id) {
-        return null;
+    public Mono<Void> deleteBook(String id) {
+        return bookRepository.deleteById(id);
     }
 
     @Override
-    public Flux<Void> updateBook(Book book) {
-        return null;
+    public Mono<Void> updateBook(Book book) {
+        return bookRepository.save(book).then();
     }
 }
