@@ -49,9 +49,9 @@ public class MongoLibraryFacadeTest {
         String bookSummary = libraryFacade.findBook("book");
         Assert.assertTrue(bookSummary.contains("author"));
         String bookId = bookSummary.substring(bookSummary.lastIndexOf(" ") + 1);
-        Assert.assertTrue(libraryFacade.showBookInfo(bookId).contains("genre"));
-        Assert.assertFalse(libraryFacade.showBookInfo(bookId).contains("commentaryTest"));
+        //Assert.assertTrue(libraryFacade.showBookInfo(bookId).get().getGenresIds().contains("genre"));
+        Assert.assertFalse(libraryFacade.showBookInfo(bookId).get().getComments().contains("commentaryTest"));
         libraryFacade.commentBook(bookId, "commentaryTest");
-        Assert.assertTrue(libraryFacade.showBookInfo(bookId).contains("commentaryTest"));
+        Assert.assertTrue(libraryFacade.showBookInfo(bookId).get().getComments().contains("commentaryTest"));
     }
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+    </style>
+</head>
+<body>
+<form action="/edit" method="post">
+    <input type="hidden" th:field="${book.id}"/>
+    <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" th:field="${book.title}"/>
+    </div>
+    <ul>
+        <th:block th:each="comment : ${book.comments}">
+            <li th:text="${comment}">Not bad</li>
+        </th:block>
+    </ul>
+    <button type="submit" th:action="@{/edit}">Save</button>
+    <br/>
+    <br/>
+    <a href="#" th:href="@{/}" role="button">Cancel</a>
+</form>
+
+<br/>
+
+<form th:if="${book.id != null}" action="/comment" th:action="@{/comment}" method="post">
+    <input type="hidden" th:field="${book.id}"/>
+    <div>
+        <label for="newComment">New comment</label>
+        <input type="text" name="newComment" th:name="newComment" id="newComment" th:field="${newComment.text}"/>
+    </div>
+    <button type="submit">Add</button>
+</form>
+</body>
+</html>
