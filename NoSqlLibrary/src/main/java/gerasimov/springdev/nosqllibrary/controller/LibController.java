@@ -3,7 +3,6 @@ package gerasimov.springdev.nosqllibrary.controller;
 import gerasimov.springdev.nosqllibrary.CommentPlaceholder;
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@Controller
+//@Controller
 public class LibController {
 
     private final LibraryFacade libraryFacade;
