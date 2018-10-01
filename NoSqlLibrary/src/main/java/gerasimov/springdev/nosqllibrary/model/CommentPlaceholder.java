@@ -1,4 +1,4 @@
-package gerasimov.springdev.nosqllibrary;
+package gerasimov.springdev.nosqllibrary.model;
 
 public class CommentPlaceholder {
     private String text;

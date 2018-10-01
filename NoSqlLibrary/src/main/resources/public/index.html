@@ -30,7 +30,7 @@
             $(".delete").click(function () {
                 $('#' + this.id).hide();
                 $.ajax({
-                        url: "/del?id=" + this.id,
+                        url: "/book/del?id=" + this.id,
                         type: 'DELETE'
                     }
                 );
@@ -58,7 +58,7 @@
                 if (newTitle !== title) {
                     console.log("replacing title " + title + " to " + newTitle);
                     $.ajax({
-                        url: "/upd",
+                        url: "/book/upd",
                         type: "PUT",
                         data: '{"id":"' + this.id + '", "title":"' + newTitle + '"}',
                         contentType: "application/json; charset=utf-8",
@@ -78,7 +78,7 @@
 
         $(function () {
             $.ajax({
-                url: "/list",
+                url: "/book/list",
                 success: function (result) {
                     $(result).each(function (key, value) {
                         addRow(value.id, value.title);
@@ -89,7 +89,7 @@
                         console.log("Adding new book: " + title);
                         if (title) {
                             $.ajax({
-                                url: "/add",
+                                url: "/book/add",
                                 type: "POST",
                                 data: '{"title":"' + title + '"}',
                                 contentType: "application/json; charset=utf-8",

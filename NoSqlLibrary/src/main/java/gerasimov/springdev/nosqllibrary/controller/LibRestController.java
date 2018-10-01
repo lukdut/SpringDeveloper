@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/book")
 public class LibRestController {
     private final LibraryFacade libraryFacade;
 
