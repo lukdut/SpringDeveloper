@@ -20,4 +20,6 @@ public interface LibraryFacade {
     void deleteBook(String id);
 
     void updateBook(Book book);
+
+    String addBook(Book book);
 }
