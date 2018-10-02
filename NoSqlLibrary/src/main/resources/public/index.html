@@ -79,6 +79,10 @@
         $(function () {
             $.ajax({
                 url: "/book/list",
+                error: function (data, textStatus, jqXHR) {
+                    if(data.status==401)
+                        window.location.replace("/login");
+                },
                 success: function (result) {
                     $(result).each(function (key, value) {
                         addRow(value.id, value.title);
