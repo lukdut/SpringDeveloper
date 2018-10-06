@@ -16,6 +16,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
+
+
         function addRow(bookId, bookTitle) {
             $("table.books").append(
                 '<tr id=' + bookId + '>' +
@@ -28,11 +30,14 @@
 
         function addDeleteCallback() {
             $(".delete").click(function () {
-                $('#' + this.id).hide();
+                var id = this.id;
                 $.ajax({
-                        url: "/book/del?id=" + this.id,
+                    url: "/book/del?id=" + id,
                     type: 'DELETE',
-                    error: errorHandler
+                    error: errorHandler,
+                    success: function () {
+                        $('#' + id).hide();
+                    }
                     }
                 );
             })
