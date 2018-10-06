@@ -31,10 +31,20 @@
                 $('#' + this.id).hide();
                 $.ajax({
                         url: "/book/del?id=" + this.id,
-                        type: 'DELETE'
+                    type: 'DELETE',
+                    error: errorHandler
                     }
                 );
             })
+        }
+
+        function errorHandler(data, textStatus, jqXHR) {
+            if (data.status === 401) {
+                alert("Unauthorized! Redirecting to the login page");
+                window.location.replace("/login");
+            } else {
+                alert("failed!");
+            }
         }
 
         function addEditCallback() {
@@ -68,8 +78,8 @@
                             newTitleField.val(newTitle);
                         },
                         error: function (data, textStatus, jqXHR) {
-                            alert("failed to update book " + newTitle);
                             newTitleField.val(title);
+                            errorHandler(data, textStatus, jqXHR);
                         }
                     });
                 }
@@ -79,10 +89,6 @@
         $(function () {
             $.ajax({
                 url: "/book/list",
-                error: function (data, textStatus, jqXHR) {
-                    if(data.status==401)
-                        window.location.replace("/login");
-                },
                 success: function (result) {
                     $(result).each(function (key, value) {
                         addRow(value.id, value.title);
@@ -103,9 +109,7 @@
                                     addDeleteCallback();
                                     addEditCallback();
                                 },
-                                error: function (data, textStatus, jqXHR) {
-                                    alert("failed to add book " + title);
-                                }
+                                error: errorHandler
                             });
                         }
                     });

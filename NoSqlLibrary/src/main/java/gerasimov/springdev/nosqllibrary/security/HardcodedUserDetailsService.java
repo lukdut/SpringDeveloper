@@ -18,6 +18,10 @@ class HardcodedUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         System.out.println("Obtaining user with name " + s);
-        return passToUserMap.get(s);
+        UserDetails userDetails = passToUserMap.get(s);
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("can not find user " + s);
+        }
+        return userDetails;
     }
 }

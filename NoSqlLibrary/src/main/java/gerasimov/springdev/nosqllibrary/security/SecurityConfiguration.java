@@ -6,18 +6,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
     @Autowired
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    public SecurityConfiguration(RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+    }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/");
     }
 
@@ -27,15 +30,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/book/*").authenticated().and()
-                .formLogin().loginProcessingUrl("/login");;
+                .authorizeRequests().antMatchers("/book/add", "/book/del", "/book/upd").authenticated().and()
+                .formLogin().loginPage("/login").loginProcessingUrl("/login")
+                .usernameParameter("username").passwordParameter("password");
     }
 
 
     @Bean
     @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
+    public UserDetailsService userDetailsServiceBean() {
         System.out.println("Creating HardcodedUserDetailsService");
         return new HardcodedUserDetailsService();
     }
