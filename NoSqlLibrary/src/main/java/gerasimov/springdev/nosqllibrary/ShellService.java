@@ -2,14 +2,13 @@ package gerasimov.springdev.nosqllibrary;
 
 
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
-import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@ShellComponent
+//@ShellComponent
 public class ShellService {
 
     private final LibraryFacade repository;
