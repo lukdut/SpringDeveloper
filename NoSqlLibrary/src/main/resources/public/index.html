@@ -4,20 +4,40 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style type="text/css">
-        body {
-            padding: 50px;
+        div.add {
+            border: 1px solid #ddd;
+            padding: 8px;
         }
 
-        .books td {
-            border: 1px solid lightgray;
-            padding: 5px;
+        .books {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .books td, .books th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .books tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .books tr:hover {
+            background-color: #ddd;
+        }
+
+        .books th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
     <script type="text/javascript">
-
-
         function addRow(bookId, bookTitle) {
             $("table.books").append(
                 '<tr id=' + bookId + '>' +
@@ -48,7 +68,7 @@
                 alert("Unauthorized! Redirecting to the login page");
                 window.location.replace("/login");
             } else {
-                alert("failed!");
+                alert("error occurred: " + textStatus + " (" + data.status + ")");
             }
         }
 
@@ -94,6 +114,7 @@
         $(function () {
             $.ajax({
                 url: "/book/list",
+                error: errorHandler,
                 success: function (result) {
                     $(result).each(function (key, value) {
                         addRow(value.id, value.title);
@@ -139,7 +160,12 @@
     <tbody>
     </tbody>
 </table>
-<label for="title">New: </label><input type="text" id="title"/>
-<button class="add">Add</button>
+<div class="add">
+    <label for="title">New: </label><input type="text" id="title"/>
+    <button class="add">Add</button>
+</div>
+<div class="logout">
+    <a href="/logout">Logout</a>
+</div>
 </body>
 </html>

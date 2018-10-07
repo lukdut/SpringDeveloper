@@ -11,8 +11,9 @@ class HardcodedUserDetailsService implements UserDetailsService {
     private Map<String, UserDetails> passToUserMap = new HashMap<>();
 
     HardcodedUserDetailsService() {
-        passToUserMap.put("admin", new SimpleUserDetails("admin", "password"));
-        passToUserMap.put("user", new SimpleUserDetails("user", "1"));
+        passToUserMap.put("admin", new SimpleUserDetails("admin", "password", Roles.ROLE_ADMIN));
+        passToUserMap.put("author", new SimpleUserDetails("author", "password", Roles.ROLE_AUTHOR, Roles.ROLE_READER));
+        passToUserMap.put("user", new SimpleUserDetails("user", "password", Roles.ROLE_READER));
     }
 
     @Override

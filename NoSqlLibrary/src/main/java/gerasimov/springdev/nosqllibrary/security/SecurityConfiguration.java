@@ -28,9 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and()
-                .authorizeRequests().antMatchers("/book/add", "/book/del", "/book/upd").authenticated().and()
+                .authenticationEntryPoint(restAuthenticationEntryPoint).and()
+                .authorizeRequests().antMatchers("/book/add", "/book/del", "/book/upd").hasAnyRole(Roles.ADMIN, Roles.AUTHOR).and()
+                .authorizeRequests().antMatchers("/book/list").hasAnyRole(Roles.ADMIN, Roles.AUTHOR, Roles.READER).and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/login")
                 .usernameParameter("username").passwordParameter("password");
     }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 //@Controller
+@Deprecated
 public class LibController {
 
     private final LibraryFacade libraryFacade;

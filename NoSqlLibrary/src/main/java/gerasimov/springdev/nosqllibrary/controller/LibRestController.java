@@ -27,7 +27,7 @@ public class LibRestController {
     }
 
     @DeleteMapping("/del")
-    public void del(@RequestParam String id){
+    public void del(@RequestParam String id) {
         System.out.println("deleting book with id=" + id);
         libraryFacade.deleteBook(id);
     }
