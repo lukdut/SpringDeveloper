@@ -35,6 +35,10 @@
             background-color: #4CAF50;
             color: white;
         }
+
+        button {
+            margin: 5px;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -43,8 +47,7 @@
                 '<tr id=' + bookId + '>' +
                 '<td>' + bookId + '</td> ' +
                 '<td><div class="title" id=' + bookId + '>' + bookTitle + '</div><input hidden=true type="text" class="newTitle" id=' + bookId + ' value="' + bookTitle + '"></td> ' +
-                '<td><button class="edit" id=' + bookId + '>Edit</button><button class="save" hidden=true id=' + bookId + '>Save</button></td>' +
-                '<td><button class="delete" id=' + bookId + '>Delete</button></td>' +
+                '<td><button class="edit" id=' + bookId + '>Edit</button><button class="save" hidden=true id=' + bookId + '>Save</button><button class="delete" id=' + bookId + '>Delete</button></td>' +
                 '</tr>');
         }
 
