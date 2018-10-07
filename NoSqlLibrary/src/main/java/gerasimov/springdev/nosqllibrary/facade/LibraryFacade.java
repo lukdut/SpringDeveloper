@@ -6,7 +6,7 @@ import gerasimov.springdev.nosqllibrary.model.Book;
 import java.util.List;
 import java.util.Optional;
 
-public interface LibraryFacade {
+public interface LibraryFacade extends BookLibFacade {
     void addBook(String title, List<String> Authors, List<String> genres);
 
     String findBook(String title);
@@ -14,12 +14,4 @@ public interface LibraryFacade {
     void commentBook(String bookId, String text);
 
     Optional<Book> showBookInfo(String bookId);
-
-    List<Book> allBooks();
-
-    void deleteBook(String id);
-
-    void updateBook(Book book);
-
-    String addBook(Book book);
 }

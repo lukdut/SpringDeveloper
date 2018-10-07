@@ -1,6 +1,6 @@
 package gerasimov.springdev.nosqllibrary.controller;
 
-import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
+import gerasimov.springdev.nosqllibrary.facade.BookLibFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,9 +9,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/book")
 public class LibRestController {
-    private final LibraryFacade libraryFacade;
+    private final BookLibFacade libraryFacade;
 
-    public LibRestController(LibraryFacade libraryFacade) {
+    public LibRestController(BookLibFacade libraryFacade) {
         this.libraryFacade = libraryFacade;
     }
 

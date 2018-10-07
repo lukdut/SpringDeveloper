@@ -18,9 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class MongoLibraryFacade implements LibraryFacade {
-
-    private final BookRepository bookRepository;
+public class MongoLibraryFacade extends MongoBookLibFacade implements LibraryFacade {
     private final AuthorRepository authorRepository;
     private final GenresRepository genresRepository;
     private final MongoTemplate mongoTemplate;
@@ -30,7 +28,7 @@ public class MongoLibraryFacade implements LibraryFacade {
             AuthorRepository authorRepository,
             GenresRepository genresRepository,
             MongoTemplate mongoTemplate) {
-        this.bookRepository = bookRepository;
+        super(bookRepository);
         this.authorRepository = authorRepository;
         this.genresRepository = genresRepository;
         this.mongoTemplate = mongoTemplate;
@@ -97,26 +95,6 @@ public class MongoLibraryFacade implements LibraryFacade {
     @Override
     public Optional<Book> showBookInfo(String bookId) {
         return bookRepository.findById(bookId);
-    }
-
-    @Override
-    public List<Book> allBooks() {
-        return bookRepository.findAll();
-    }
-
-    @Override
-    public void deleteBook(String id) {
-        bookRepository.deleteById(id);
-    }
-
-    @Override
-    public void updateBook(Book book) {
-        bookRepository.save(book);
-    }
-
-    @Override
-    public String addBook(Book book) {
-        return bookRepository.save(book).getId();
     }
 
     private String booksToString(List<Book> books) {
