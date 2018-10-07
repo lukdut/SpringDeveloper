@@ -4,3 +4,16 @@ spring:
       host: localhost
       port: 27017
       database: library
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    driver-class-name: org.h2.Driver
+    schema: classpath:acl-schema.sql
+    data: classpath:acl-data.sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /console
