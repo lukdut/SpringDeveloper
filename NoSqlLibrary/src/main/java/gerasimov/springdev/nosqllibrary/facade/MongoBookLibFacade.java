@@ -83,12 +83,10 @@ public class MongoBookLibFacade implements BookLibFacade {
         Acl acl = aclService.readAclById(oid);
         // определить какие права и для кого проверять
         final List<Permission> permissions = Arrays.asList(BasePermission.READ);
-        final List<Sid> sids = Arrays.asList((Sid) new GrantedAuthoritySid("admin"));
+        final List<Sid> sids = Arrays.asList((Sid) new PrincipalSid("admin"));
         // выполнить проверку
-        acl.getOwner();
-        //TODO
-        /*if (!acl.isGranted(permissions, sids, false)) {
+        if (!acl.isGranted(permissions, sids, false)) {
             throw new RuntimeException("Access denied.");
-        }*/
+        }
     }
 }
