@@ -23,10 +23,11 @@ public class AclContext {
     DataSource dataSource;
 
     @Bean
-    public MethodSecurityExpressionHandler
-    defaultMethodSecurityExpressionHandler() {
+    public MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(new AclPermissionEvaluator(aclService()));
+        AclPermissionEvaluator permissionEvaluator = new AclPermissionEvaluator(aclService());
+        permissionEvaluator.setObjectIdentityRetrievalStrategy(new BookIdentityRetrieval());
+        expressionHandler.setPermissionEvaluator(permissionEvaluator);
         return expressionHandler;
     }
 
