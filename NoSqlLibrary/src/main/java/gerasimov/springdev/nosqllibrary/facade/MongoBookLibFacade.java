@@ -35,9 +35,13 @@ public class MongoBookLibFacade implements BookLibFacade {
     }
 
     @Override
+    //Only author can delete book
+    //А если например захотеть еще дать разрешение всем у кого есть разрешение DELETE, то придется писать тоже кастомный
+    //метод в бине, тк "hasPermission" не заюзать ибо нужно еще ID сконвертить в нужный формат?
     @PreAuthorize("@ownershipChecker.isOwner(#id)")
     public void deleteBook(String id) {
         bookRepository.deleteById(id);
+        aclService.deleteAcl(new ObjectIdentityImpl(Book.class, BookIdentityRetrieval.idFromString(id)), true);
     }
 
     @Override
