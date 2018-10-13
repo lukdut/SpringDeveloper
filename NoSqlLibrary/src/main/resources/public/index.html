@@ -16,6 +16,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script type="text/javascript">
+
+
         function addRow(bookId, bookTitle) {
             $("table.books").append(
                 '<tr id=' + bookId + '>' +
@@ -28,13 +30,26 @@
 
         function addDeleteCallback() {
             $(".delete").click(function () {
-                $('#' + this.id).hide();
+                var id = this.id;
                 $.ajax({
-                        url: "/del?id=" + this.id,
-                        type: 'DELETE'
+                    url: "/book/del?id=" + id,
+                    type: 'DELETE',
+                    error: errorHandler,
+                    success: function () {
+                        $('#' + id).hide();
+                    }
                     }
                 );
             })
+        }
+
+        function errorHandler(data, textStatus, jqXHR) {
+            if (data.status === 401) {
+                alert("Unauthorized! Redirecting to the login page");
+                window.location.replace("/login");
+            } else {
+                alert("failed!");
+            }
         }
 
         function addEditCallback() {
@@ -58,7 +73,7 @@
                 if (newTitle !== title) {
                     console.log("replacing title " + title + " to " + newTitle);
                     $.ajax({
-                        url: "/upd",
+                        url: "/book/upd",
                         type: "PUT",
                         data: '{"id":"' + this.id + '", "title":"' + newTitle + '"}',
                         contentType: "application/json; charset=utf-8",
@@ -68,8 +83,8 @@
                             newTitleField.val(newTitle);
                         },
                         error: function (data, textStatus, jqXHR) {
-                            alert("failed to update book " + newTitle);
                             newTitleField.val(title);
+                            errorHandler(data, textStatus, jqXHR);
                         }
                     });
                 }
@@ -78,7 +93,7 @@
 
         $(function () {
             $.ajax({
-                url: "/list",
+                url: "/book/list",
                 success: function (result) {
                     $(result).each(function (key, value) {
                         addRow(value.id, value.title);
@@ -89,7 +104,7 @@
                         console.log("Adding new book: " + title);
                         if (title) {
                             $.ajax({
-                                url: "/add",
+                                url: "/book/add",
                                 type: "POST",
                                 data: '{"title":"' + title + '"}',
                                 contentType: "application/json; charset=utf-8",
@@ -99,9 +114,7 @@
                                     addDeleteCallback();
                                     addEditCallback();
                                 },
-                                error: function (data, textStatus, jqXHR) {
-                                    alert("failed to add book " + title);
-                                }
+                                error: errorHandler
                             });
                         }
                     });

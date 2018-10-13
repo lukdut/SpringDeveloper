@@ -1,8 +1,8 @@
 package gerasimov.springdev.nosqllibrary.controller;
 
-import gerasimov.springdev.nosqllibrary.CommentPlaceholder;
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
+import gerasimov.springdev.nosqllibrary.model.CommentPlaceholder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
