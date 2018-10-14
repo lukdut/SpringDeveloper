@@ -1,14 +1,27 @@
 package gerasimov.springdev.migration;
 
-public class BookDTO {
-    private Long id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
+public class Book {
+    @Id
+    private String id;
+
     private String title;
 
-    public Long getId() {
+    public Book() {
+    }
+
+    public Book(String title) {
+        this.title = title;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

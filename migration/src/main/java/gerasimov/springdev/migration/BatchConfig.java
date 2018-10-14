@@ -1,6 +1,8 @@
 package gerasimov.springdev.migration;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -41,22 +43,17 @@ public class BatchConfig {
     }
 
     @Bean
-    ItemProcessor<BookDTO, String> stringVoidItemProcessor() {
-        return new ItemProcessor<BookDTO, String>() {
-            @Override
-            public String process(BookDTO s) {
-                return s.getTitle();
-            }
-        };
+    ItemProcessor<BookDTO, Book> stringVoidItemProcessor() {
+        return bookDTO -> new Book(bookDTO.getTitle());
     }
 
     @Bean
-    ItemWriter<String> voidItemWriter() {
-        return list -> System.out.println("processed: " + list);
+    ItemWriter<Book> voidItemWriter(BookRepository bookRepository) {
+        return bookRepository::saveAll;
     }
 
     @Bean
-    public Step step(ItemReader<BookDTO> reader, ItemProcessor processor, ItemWriter<String> writer) {
+    public Step step(ItemReader<BookDTO> reader, ItemProcessor processor, ItemWriter<Book> writer) {
         return stepBuilderFactory.get("step")
                 .chunk(3)
                 .reader(reader)
@@ -71,6 +68,17 @@ public class BatchConfig {
         return jobBuilderFactory.get("migration")
                 .flow(step)
                 .end()
+                .listener(new JobExecutionListener() {
+                    @Override
+                    public void beforeJob(JobExecution jobExecution) {
+                        System.out.println("Starting processing");
+                    }
+
+                    @Override
+                    public void afterJob(JobExecution jobExecution) {
+                        System.out.println("Processing completed");
+                    }
+                })
                 .build();
     }
 }
