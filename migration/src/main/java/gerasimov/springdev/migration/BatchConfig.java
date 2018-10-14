@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import javax.sql.DataSource;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableBatchProcessing
@@ -49,7 +50,11 @@ public class BatchConfig {
 
     @Bean
     ItemWriter<Book> voidItemWriter(BookRepository bookRepository) {
-        return bookRepository::saveAll;
+        return list -> {
+            bookRepository.saveAll(list.stream()
+                    .filter(item -> !bookRepository.findFirstByTitle(item.getTitle()).isPresent())
+                    .collect(Collectors.toList()));
+        };
     }
 
     @Bean
