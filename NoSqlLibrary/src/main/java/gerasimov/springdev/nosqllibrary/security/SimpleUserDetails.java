@@ -1,24 +1,29 @@
 package gerasimov.springdev.nosqllibrary.security;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimpleUserDetails implements UserDetails {
 
     private final String name;
     private final String password;
+    private final List<SimpleGrantedAuthority> authorities;
 
-    public SimpleUserDetails(String name, String password){
+    public SimpleUserDetails(String name, String password, String... roles) {
         this.name = name;
         this.password = password;
+        authorities = Stream.of(roles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        return authorities;
     }
 
     @Override
