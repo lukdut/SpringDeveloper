@@ -1,4 +1,4 @@
-package gerasimov.springdev.migration;
+package gerasimov.springdev.migration.model;
 
 public class BookDTO {
     private Long id;

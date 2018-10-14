@@ -1,5 +1,6 @@
-package gerasimov.springdev.migration;
+package gerasimov.springdev.migration.repository;
 
+import gerasimov.springdev.migration.model.Book;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

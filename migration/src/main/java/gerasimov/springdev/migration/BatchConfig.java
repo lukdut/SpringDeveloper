@@ -1,5 +1,8 @@
 package gerasimov.springdev.migration;
 
+import gerasimov.springdev.migration.model.Book;
+import gerasimov.springdev.migration.model.BookDTO;
+import gerasimov.springdev.migration.repository.BookRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
@@ -50,11 +53,9 @@ public class BatchConfig {
 
     @Bean
     ItemWriter<Book> voidItemWriter(BookRepository bookRepository) {
-        return list -> {
-            bookRepository.saveAll(list.stream()
-                    .filter(item -> !bookRepository.findFirstByTitle(item.getTitle()).isPresent())
-                    .collect(Collectors.toList()));
-        };
+        return list -> bookRepository.saveAll(list.stream()
+                .filter(item -> !bookRepository.findFirstByTitle(item.getTitle()).isPresent())
+                .collect(Collectors.toList()));
     }
 
     @Bean

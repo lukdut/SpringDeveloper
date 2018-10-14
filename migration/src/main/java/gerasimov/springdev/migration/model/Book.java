@@ -1,4 +1,4 @@
-package gerasimov.springdev.migration;
+package gerasimov.springdev.migration.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
