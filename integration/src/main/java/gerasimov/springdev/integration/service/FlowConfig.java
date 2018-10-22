@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.Router;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.file.FileWritingMessageHandler;
 import org.springframework.integration.file.support.FileExistsMode;
 import org.springframework.integration.router.AbstractMessageRouter;
@@ -23,13 +22,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
+import static gerasimov.springdev.integration.service.ChannelsConfig.*;
+
 @Configuration
 public class FlowConfig {
-    static final String ORDER_INPUT_CHANNEL = "orderInputChannel";
-    private static final String NON_EMPTY_ORDERS = "nonEmptyOrders";
-    private static final String INCORRECT_ORDERS = "incorrectOrders";
-    private static final String CORRECT_ORDERS = "correctOrders";
-
     @Bean
     public IntegrationFlow orderFlow() {
         return f -> f.channel(ORDER_INPUT_CHANNEL)
@@ -83,27 +79,6 @@ public class FlowConfig {
     @Bean
     public GenericTransformer<Order, String> orderToStringTransformer() {
         return Order::toString;
-    }
-
-
-    @Bean
-    public MessageChannel inputChannel() {
-        return MessageChannels.direct(ORDER_INPUT_CHANNEL).get();
-    }
-
-    @Bean
-    public MessageChannel nonEmptyOrders() {
-        return MessageChannels.direct(NON_EMPTY_ORDERS).get();
-    }
-
-    @Bean
-    public MessageChannel incorrectOrders() {
-        return MessageChannels.direct(INCORRECT_ORDERS).get();
-    }
-
-    @Bean
-    public MessageChannel correctOrders() {
-        return MessageChannels.direct(CORRECT_ORDERS).get();
     }
 
 
