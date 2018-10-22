@@ -16,9 +16,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @SpringBootApplication
 @IntegrationComponentScan
 public class IntegrationApplication {
+    public static double VIP_THRESHOLD = 60000;
     private static AtomicLong counter = new AtomicLong();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(IntegrationApplication.class, args);
 
         OrderInputGateway orderInputGateway = ctx.getBean(OrderInputGateway.class);
@@ -51,8 +52,8 @@ public class IntegrationApplication {
 
         for (int i = 0; i < amountOfPositions; i++) {
             OrderPosition orderPosition = new OrderPosition();
-            orderPosition.setCount(ThreadLocalRandom.current().nextInt(-2, 10));
-            orderPosition.setPrice(ThreadLocalRandom.current().nextDouble(-100, 1500));
+            orderPosition.setCount(ThreadLocalRandom.current().nextInt(1, 10));
+            orderPosition.setPrice(ThreadLocalRandom.current().nextDouble(-10, 1500));
             orderPosition.setItem("Goods");
             orderPositions.add(orderPosition);
         }

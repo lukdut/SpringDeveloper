@@ -1,5 +1,6 @@
 integration:
   output:
     dir: C:\test
-    correct: correct.txt
     incorrect: incorrect.txt
+    ordinary: ordinary.txt
+    vip: vip.txt

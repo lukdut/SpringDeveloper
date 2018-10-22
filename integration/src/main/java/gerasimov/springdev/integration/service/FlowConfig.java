@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
+import static gerasimov.springdev.integration.IntegrationApplication.VIP_THRESHOLD;
 import static gerasimov.springdev.integration.service.ChannelsConfig.*;
 
 @Configuration
@@ -35,7 +36,7 @@ public class FlowConfig {
 
     @Bean
     @Router(inputChannel = NON_EMPTY_ORDERS)
-    public AbstractMessageRouter myCustomRouter(
+    public AbstractMessageRouter correctnessRouter(
             @Qualifier("correctOrders") MessageChannel ok,
             @Qualifier("incorrectOrders") MessageChannel incorrect) {
         return new AbstractMessageRouter() {
@@ -54,13 +55,44 @@ public class FlowConfig {
         };
     }
 
+    @Bean
+    @Router(inputChannel = CORRECT_ORDERS)
+    public AbstractMessageRouter vipRouter(
+            @Qualifier("ordinaryOrders") MessageChannel ordinary,
+            @Qualifier("vipOrders") MessageChannel vip) {
+        return new AbstractMessageRouter() {
+            @Override
+            protected Collection<MessageChannel> determineTargetChannels(Message<?> message) {
+                final Order payload = (Order) message.getPayload();
+                double totalAmount = payload.getPositions().stream()
+                        .mapToDouble(orderPosition -> orderPosition.getPrice() * orderPosition.getCount())
+                        .sum();
+                if (totalAmount >= VIP_THRESHOLD) {
+                    return Collections.singletonList(vip);
+                } else {
+                    return Collections.singletonList(ordinary);
+                }
+            }
+        };
+    }
+
 
     @Bean
-    public IntegrationFlow correctFlow(
+    public IntegrationFlow ordinaryFlow(
             @Value("${integration.output.dir}") String outputDir,
-            @Value("${integration.output.correct}") String fileName,
+            @Value("${integration.output.ordinary}") String fileName,
             GenericTransformer<Order, String> orderToStringTransformer) {
-        return f -> f.channel(CORRECT_ORDERS)
+        return f -> f.channel(ORDINARY_ORDERS)
+                .transform(orderToStringTransformer)
+                .handle(getMessageWriterHandler(outputDir, fileName));
+    }
+
+    @Bean
+    public IntegrationFlow vipFlow(
+            @Value("${integration.output.dir}") String outputDir,
+            @Value("${integration.output.vip}") String fileName,
+            GenericTransformer<Order, String> orderToStringTransformer) {
+        return f -> f.channel(VIP_ORDERS)
                 .transform(orderToStringTransformer)
                 .handle(getMessageWriterHandler(outputDir, fileName));
     }

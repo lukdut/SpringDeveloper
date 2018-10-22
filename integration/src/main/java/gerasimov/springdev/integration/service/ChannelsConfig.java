@@ -12,6 +12,9 @@ public class ChannelsConfig {
     static final String NON_EMPTY_ORDERS = "nonEmptyOrders";
     static final String INCORRECT_ORDERS = "incorrectOrders";
     static final String CORRECT_ORDERS = "correctOrders";
+    static final String ORDINARY_ORDERS = "ordinaryOrders";
+    static final String VIP_ORDERS = "vipOrders";
+
 
 
     @Bean
@@ -32,5 +35,15 @@ public class ChannelsConfig {
     @Bean
     public MessageChannel correctOrders() {
         return MessageChannels.direct(CORRECT_ORDERS).get();
+    }
+
+    @Bean
+    public MessageChannel ordinaryOrders() {
+        return MessageChannels.direct(ORDINARY_ORDERS).get();
+    }
+
+    @Bean
+    public MessageChannel vipOrders() {
+        return MessageChannels.direct(VIP_ORDERS).get();
     }
 }
