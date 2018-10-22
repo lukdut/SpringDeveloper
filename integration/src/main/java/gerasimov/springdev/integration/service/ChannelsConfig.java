@@ -2,7 +2,9 @@ package gerasimov.springdev.integration.service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.dsl.channel.MessageChannels;
+import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.messaging.MessageChannel;
 
 
@@ -28,22 +30,27 @@ public class ChannelsConfig {
     }
 
     @Bean
-    public MessageChannel incorrectOrders() {
-        return MessageChannels.direct(INCORRECT_ORDERS).get();
-    }
-
-    @Bean
     public MessageChannel correctOrders() {
         return MessageChannels.direct(CORRECT_ORDERS).get();
     }
 
     @Bean
     public MessageChannel ordinaryOrders() {
-        return MessageChannels.direct(ORDINARY_ORDERS).get();
+        return MessageChannels.queue(100000).get();
     }
 
     @Bean
     public MessageChannel vipOrders() {
-        return MessageChannels.direct(VIP_ORDERS).get();
+        return MessageChannels.queue(100000).get();
+    }
+
+    @Bean
+    public MessageChannel incorrectOrders() {
+        return MessageChannels.queue(100000).get();
+    }
+
+    @Bean(name = PollerMetadata.DEFAULT_POLLER)
+    public PollerMetadata poller() {
+        return Pollers.fixedRate(200).get();
     }
 }
