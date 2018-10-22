@@ -1,4 +1,5 @@
 integration:
   output:
     dir: C:\test
-    all: all.txt
+    correct: correct.txt
+    incorrect: incorrect.txt

@@ -2,7 +2,7 @@ package gerasimov.springdev.integration;
 
 import gerasimov.springdev.integration.model.Order;
 import gerasimov.springdev.integration.model.OrderPosition;
-import gerasimov.springdev.integration.service.OrderGateway;
+import gerasimov.springdev.integration.service.OrderInputGateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,7 +21,7 @@ public class IntegrationApplication {
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext ctx = SpringApplication.run(IntegrationApplication.class, args);
 
-        OrderGateway orderGateway = ctx.getBean(OrderGateway.class);
+        OrderInputGateway orderInputGateway = ctx.getBean(OrderInputGateway.class);
 
 
         new Thread(() -> {
@@ -39,13 +39,13 @@ public class IntegrationApplication {
         }, "measureThread").start();
 
         while (!Thread.interrupted()) {
-            orderGateway.orderReceiver(generateOrder());
+            orderInputGateway.receiveOrder(generateOrder());
             counter.incrementAndGet();
         }
     }
 
     private static Order generateOrder() {
-        int amountOfPositions = ThreadLocalRandom.current().nextInt(1, 15);
+        int amountOfPositions = ThreadLocalRandom.current().nextInt(0, 15);
 
         List<OrderPosition> orderPositions = new ArrayList<>(amountOfPositions);
 
