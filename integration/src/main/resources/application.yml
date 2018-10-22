@@ -1,3 +1,4 @@
 integration:
   output:
-    all: G:\my docs\Мои исходники\SpringDeveloper\integration\output\all
+    dir: C:\test
+    all: all.txt

@@ -6,7 +6,6 @@ import org.springframework.integration.annotation.MessagingGateway;
 
 @MessagingGateway
 public interface OrderGateway {
-
-    @Gateway(requestChannel = "order.input")
-    boolean orderReceiver(Order order);
+    @Gateway(requestChannel = "orderChannel")
+    void orderReceiver(Order order);
 }
