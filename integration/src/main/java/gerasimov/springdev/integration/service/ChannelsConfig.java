@@ -1,5 +1,6 @@
 package gerasimov.springdev.integration.service;
 
+import gerasimov.springdev.integration.model.Order;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.Pollers;
@@ -21,32 +22,32 @@ public class ChannelsConfig {
 
     @Bean
     public MessageChannel inputChannel() {
-        return MessageChannels.direct(ORDER_INPUT_CHANNEL).get();
+        return MessageChannels.direct(ORDER_INPUT_CHANNEL).datatype(Order.class).get();
     }
 
     @Bean
     public MessageChannel nonEmptyOrders() {
-        return MessageChannels.direct(NON_EMPTY_ORDERS).get();
+        return MessageChannels.direct(NON_EMPTY_ORDERS).datatype(Order.class).get();
     }
 
     @Bean
     public MessageChannel correctOrders() {
-        return MessageChannels.direct(CORRECT_ORDERS).get();
+        return MessageChannels.direct(CORRECT_ORDERS).datatype(Order.class).get();
     }
 
     @Bean
     public PollableChannel ordinaryOrders() {
-        return MessageChannels.queue(100000).get();
+        return MessageChannels.queue(100000).datatype(Order.class).get();
     }
 
     @Bean
     public MessageChannel vipOrders() {
-        return MessageChannels.rendezvous().get();
+        return MessageChannels.rendezvous().datatype(Order.class).get();
     }
 
     @Bean
     public PollableChannel incorrectOrders() {
-        return MessageChannels.queue(100000).get();
+        return MessageChannels.queue(100000).datatype(Order.class).get();
     }
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
