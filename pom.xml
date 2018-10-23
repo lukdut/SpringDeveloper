@@ -33,6 +33,7 @@
         <module>StudentsTest</module>
         <module>Library</module>
         <module>NoSqlLibrary</module>
+        <module>migration</module>
     </modules>
 
     <dependencyManagement>
