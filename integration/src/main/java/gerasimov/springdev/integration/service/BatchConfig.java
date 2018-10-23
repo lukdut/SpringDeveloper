@@ -21,6 +21,9 @@ import org.springframework.messaging.PollableChannel;
 
 import java.io.File;
 
+import static gerasimov.springdev.integration.service.ChannelsConfig.INCORRECT_ORDERS;
+import static gerasimov.springdev.integration.service.ChannelsConfig.ORDINARY_ORDERS;
+
 @Configuration
 @EnableBatchProcessing
 public class BatchConfig {
@@ -35,7 +38,12 @@ public class BatchConfig {
     }
 
     @Bean
-    ItemReader<Order> ordinaryReader(@Qualifier("ordinaryOrders") PollableChannel messageChannel) {
+    ItemReader<Order> ordinaryReader(@Qualifier(ORDINARY_ORDERS) PollableChannel messageChannel) {
+        return () -> (Order) messageChannel.receive().getPayload();
+    }
+
+    @Bean
+    ItemReader<Order> incorrectReader(@Qualifier(INCORRECT_ORDERS) PollableChannel messageChannel) {
         return () -> (Order) messageChannel.receive().getPayload();
     }
 
@@ -67,7 +75,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step stepOrdinary(ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerOrdinary") ItemWriter<String> writer) {
+    public Step stepOrdinary(@Qualifier("ordinaryReader") ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerOrdinary") ItemWriter<String> writer) {
         return stepBuilderFactory.get("stepOrdinary")
                 .chunk(100)
                 .reader(reader)
@@ -77,7 +85,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step stepIncorrect(ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerIncorrect") ItemWriter<String> writer) {
+    public Step stepIncorrect(@Qualifier("incorrectReader") ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerIncorrect") ItemWriter<String> writer) {
         return stepBuilderFactory.get("stepIncorrect")
                 .chunk(100)
                 .reader(reader)

@@ -45,7 +45,7 @@ public class ChannelsConfig {
     }
 
     @Bean
-    public MessageChannel incorrectOrders() {
+    public PollableChannel incorrectOrders() {
         return MessageChannels.queue(100000).get();
     }
 

@@ -30,7 +30,7 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow orderFlow() {
         return f -> f.channel(ORDER_INPUT_CHANNEL)
-                .<Order>filter(o -> !o.getPositions().isEmpty())
+                .<Order>filter(o -> o.getPositions() != null && !o.getPositions().isEmpty())
                 .channel(NON_EMPTY_ORDERS);
     }
 
