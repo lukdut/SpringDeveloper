@@ -76,17 +76,6 @@ public class FlowConfig {
         };
     }
 
-
-    //@Bean
-    public IntegrationFlow ordinaryFlow(
-            @Value("${integration.output.dir}") String outputDir,
-            @Value("${integration.output.ordinary}") String fileName,
-            GenericTransformer<Order, String> orderToStringTransformer) {
-        return f -> f.channel(ORDINARY_ORDERS)
-                .transform(orderToStringTransformer)
-                .handle(getMessageWriterHandler(outputDir, fileName));
-    }
-
     @Bean
     public IntegrationFlow vipFlow(
             @Value("${integration.output.dir}") String outputDir,
@@ -96,17 +85,6 @@ public class FlowConfig {
                 .transform(orderToStringTransformer)
                 .handle(getMessageWriterHandler(outputDir, fileName));
     }
-
-    @Bean
-    public IntegrationFlow incorrectFlow(
-            @Value("${integration.output.dir}") String outputDir,
-            @Value("${integration.output.incorrect}") String fileName,
-            GenericTransformer<Order, String> orderToStringTransformer) {
-        return f -> f.channel(INCORRECT_ORDERS)
-                .transform(orderToStringTransformer)
-                .handle(getMessageWriterHandler(outputDir, fileName));
-    }
-
 
     @Bean
     public GenericTransformer<Order, String> orderToStringTransformer() {

@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @SpringBootApplication
 @IntegrationComponentScan
 public class IntegrationApplication {
-    public static double VIP_THRESHOLD = 85000;
+    public static double VIP_THRESHOLD = 90000;
     private static AtomicLong counter = new AtomicLong();
 
     public static void main(String[] args) {
@@ -45,19 +45,24 @@ public class IntegrationApplication {
             }
         }, "measureThread").start();
 
-        new Thread(() -> {
-            final JobLauncher launcher = ctx.getBean(JobLauncher.class);
-            try {
-                launcher.run(ctx.getBean(Job.class), new JobParameters());
-            } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobInstanceAlreadyCompleteException | JobRestartException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        startJobAsync(ctx, "writeOrdinary");
+        startJobAsync(ctx, "writeIncorrect");
 
         while (!Thread.interrupted()) {
             orderInputGateway.receiveOrder(generateOrder());
             counter.incrementAndGet();
         }
+    }
+
+    private static void startJobAsync(ConfigurableApplicationContext ctx, String job) {
+        new Thread(() -> {
+            final JobLauncher launcher = ctx.getBean(JobLauncher.class);
+            try {
+                launcher.run(ctx.getBean(job, Job.class), new JobParameters());
+            } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobInstanceAlreadyCompleteException | JobRestartException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private static Order generateOrder() {

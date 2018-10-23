@@ -45,7 +45,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public FlatFileItemWriter<String> writer(
+    public FlatFileItemWriter<String> writerOrdinary(
             @Value("${integration.output.dir}") String outputDir,
             @Value("${integration.output.ordinary}") String fileName) {
         return new FlatFileItemWriterBuilder<String>()
@@ -56,9 +56,30 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step step(ItemReader<Order> reader, ItemProcessor processor, ItemWriter<String> writer) {
-        return stepBuilderFactory.get("step")
-                .chunk(10)
+    public FlatFileItemWriter<String> writerIncorrect(
+            @Value("${integration.output.dir}") String outputDir,
+            @Value("${integration.output.incorrect}") String fileName) {
+        return new FlatFileItemWriterBuilder<String>()
+                .name("incorrectOrderWriter")
+                .resource(new FileSystemResource(new File(new File(outputDir), fileName)))
+                .lineAggregator(new DelimitedLineAggregator<>())
+                .build();
+    }
+
+    @Bean
+    public Step stepOrdinary(ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerOrdinary") ItemWriter<String> writer) {
+        return stepBuilderFactory.get("stepOrdinary")
+                .chunk(100)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
+
+    @Bean
+    public Step stepIncorrect(ItemReader<Order> reader, ItemProcessor processor, @Qualifier("writerIncorrect") ItemWriter<String> writer) {
+        return stepBuilderFactory.get("stepIncorrect")
+                .chunk(100)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
@@ -67,8 +88,16 @@ public class BatchConfig {
 
 
     @Bean
-    public Job write(Step step) {
-        return jobBuilderFactory.get("migration")
+    public Job writeOrdinary(@Qualifier("stepOrdinary") Step step) {
+        return jobBuilderFactory.get("ordinary")
+                .flow(step)
+                .end()
+                .build();
+    }
+
+    @Bean
+    public Job writeIncorrect(@Qualifier("stepIncorrect") Step step) {
+        return jobBuilderFactory.get("incorrect")
                 .flow(step)
                 .end()
                 .build();

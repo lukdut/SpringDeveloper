@@ -19,7 +19,6 @@ public class ChannelsConfig {
     static final String VIP_ORDERS = "vipOrders";
 
 
-
     @Bean
     public MessageChannel inputChannel() {
         return MessageChannels.direct(ORDER_INPUT_CHANNEL).get();
@@ -42,7 +41,7 @@ public class ChannelsConfig {
 
     @Bean
     public MessageChannel vipOrders() {
-        return MessageChannels.queue(100000).get();
+        return MessageChannels.rendezvous().get();
     }
 
     @Bean
