@@ -77,7 +77,7 @@ public class FlowConfig {
     }
 
 
-    @Bean
+    //@Bean
     public IntegrationFlow ordinaryFlow(
             @Value("${integration.output.dir}") String outputDir,
             @Value("${integration.output.ordinary}") String fileName,

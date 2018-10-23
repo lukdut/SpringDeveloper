@@ -3,6 +3,13 @@ package gerasimov.springdev.integration;
 import gerasimov.springdev.integration.model.Order;
 import gerasimov.springdev.integration.model.OrderPosition;
 import gerasimov.springdev.integration.service.OrderInputGateway;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -16,14 +23,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @SpringBootApplication
 @IntegrationComponentScan
 public class IntegrationApplication {
-    public static double VIP_THRESHOLD = 60000;
+    public static double VIP_THRESHOLD = 85000;
     private static AtomicLong counter = new AtomicLong();
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(IntegrationApplication.class, args);
 
         OrderInputGateway orderInputGateway = ctx.getBean(OrderInputGateway.class);
-
 
         new Thread(() -> {
             long prev;
@@ -38,6 +44,15 @@ public class IntegrationApplication {
                 System.out.println("Speed is " + speed + " events per second");
             }
         }, "measureThread").start();
+
+        new Thread(() -> {
+            final JobLauncher launcher = ctx.getBean(JobLauncher.class);
+            try {
+                launcher.run(ctx.getBean(Job.class), new JobParameters());
+            } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobInstanceAlreadyCompleteException | JobRestartException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
         while (!Thread.interrupted()) {
             orderInputGateway.receiveOrder(generateOrder());

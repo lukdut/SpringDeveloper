@@ -6,6 +6,7 @@ import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.PollableChannel;
 
 
 @Configuration
@@ -35,7 +36,7 @@ public class ChannelsConfig {
     }
 
     @Bean
-    public MessageChannel ordinaryOrders() {
+    public PollableChannel ordinaryOrders() {
         return MessageChannels.queue(100000).get();
     }
 
