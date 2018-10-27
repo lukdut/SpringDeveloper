@@ -3,6 +3,8 @@ package gerasimov.springdev.nosqllibrary.controller;
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
 import gerasimov.springdev.nosqllibrary.model.CommentPlaceholder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import java.util.Optional;
 //@Controller
 @Deprecated
 public class LibController {
+    private static final Logger LOG = LoggerFactory.getLogger(LibController.class);
 
     private final LibraryFacade libraryFacade;
 
@@ -57,7 +60,7 @@ public class LibController {
     @PostMapping("/comment")
     public String comment(Model model, Book book, CommentPlaceholder newComment) {
         libraryFacade.commentBook(book.getId(), newComment.getText());
-        System.out.println("adding comment " + newComment.getText());
+        LOG.debug("adding comment " + newComment.getText());
         model.addAttribute("newComment", new CommentPlaceholder());
         model.addAttribute("book", book);
         return "redirect:/edit/" + book.getId();

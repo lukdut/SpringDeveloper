@@ -2,6 +2,8 @@ package gerasimov.springdev.nosqllibrary;
 
 
 import gerasimov.springdev.nosqllibrary.facade.LibraryFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -11,6 +13,7 @@ import java.util.stream.Stream;
 
 @ShellComponent
 public class ShellService {
+    private Logger LOG = LoggerFactory.getLogger(ShellService.class);
 
     private final LibraryFacade repository;
 
@@ -27,7 +30,7 @@ public class ShellService {
 
     @ShellMethod("find books by title")
     public void find(@ShellOption String title) {
-        System.out.println(repository.findBook(title));
+        LOG.debug(repository.findBook(title));
     }
 
     @ShellMethod("add commentary for book by id")
@@ -37,6 +40,6 @@ public class ShellService {
 
     @ShellMethod("show book info by id")
     public void info(@ShellOption String id) {
-        System.out.println(repository.showBookInfo(id));
+        LOG.debug(String.valueOf(repository.showBookInfo(id)));
     }
 }
