@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @ShellComponent
 public class ShellService {
-    private Logger LOG = LoggerFactory.getLogger(ShellService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ShellService.class);
 
     private final LibraryFacade repository;
 
