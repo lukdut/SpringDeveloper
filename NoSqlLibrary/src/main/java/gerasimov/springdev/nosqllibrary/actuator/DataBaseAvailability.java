@@ -27,7 +27,7 @@ public class DataBaseAvailability extends AbstractHealthIndicator {
         }
     }
 
-    public boolean serverListening(String host, int port) {
+    private boolean serverListening(String host, int port) {
         try (Socket ignore = new Socket(host, port)) {
             return true;
         } catch (Exception e) {
