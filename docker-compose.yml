@@ -12,3 +12,5 @@ services:
     image: mongo:4.0.3-xenial
     ports:
       - 27017:27017
+    volumes:
+      - C:/mongodata:/data/db
