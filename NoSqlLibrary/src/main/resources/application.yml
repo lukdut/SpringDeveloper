@@ -17,3 +17,6 @@ spring:
     console:
       enabled: true
       path: /console
+  shell:
+    interactive:
+      enabled: false

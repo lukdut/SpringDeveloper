@@ -17,8 +17,8 @@ ENV PROJ_DIR=/opt/proj
 RUN mkdir -p $PROJ_DIR
 WORKDIR $PROJ_DIR
 
-COPY --from=0 $PROJ_DIR/NoSqlLibrary/target/nosqllibrary-0.0.1-SNAPSHOT.jar $PROJ_DIR/
+COPY --from=0 $PROJ_DIR/NoSqlLibrary/target/nosqlLib.jar $PROJ_DIR/
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/opt/proj/nosqllibrary-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/opt/proj/nosqlLib.jar"]
