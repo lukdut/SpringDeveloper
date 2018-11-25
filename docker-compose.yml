@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  library:
+    image: library:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.0.3-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/mark/mongodata:/data/db
