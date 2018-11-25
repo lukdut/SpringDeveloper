@@ -6,6 +6,8 @@ import gerasimov.springdev.nosqllibrary.model.Genre;
 import gerasimov.springdev.nosqllibrary.repository.AuthorRepository;
 import gerasimov.springdev.nosqllibrary.repository.BookRepository;
 import gerasimov.springdev.nosqllibrary.repository.GenresRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MongoLibraryFacade extends MongoBookLibFacade implements LibraryFacade {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoLibraryFacade.class);
     private final AuthorRepository authorRepository;
     private final GenresRepository genresRepository;
     private final MongoTemplate mongoTemplate;
@@ -55,7 +58,7 @@ public class MongoLibraryFacade extends MongoBookLibFacade implements LibraryFac
                 .collect(Collectors.toSet());
 
         if (existedBook.isPresent() && existedBook.get().getAuthorIds().equals(authorsId)) {
-            System.out.println("Book already exists");
+            LOG.debug("Book already exists");
         } else {
             Set<String> genreIds = genres.stream()
                     .map(name -> {

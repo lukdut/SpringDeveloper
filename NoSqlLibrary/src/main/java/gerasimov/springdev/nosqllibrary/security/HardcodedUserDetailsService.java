@@ -1,5 +1,7 @@
 package gerasimov.springdev.nosqllibrary.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 class HardcodedUserDetailsService implements UserDetailsService {
+    private static final Logger LOG = LoggerFactory.getLogger(HardcodedUserDetailsService.class);
+
     private Map<String, UserDetails> passToUserMap = new HashMap<>();
 
     HardcodedUserDetailsService() {
@@ -18,7 +22,7 @@ class HardcodedUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        System.out.println("Obtaining user with name " + s);
+        LOG.debug("Obtaining user with name " + s);
         UserDetails userDetails = passToUserMap.get(s);
         if (userDetails == null) {
             throw new UsernameNotFoundException("can not find user " + s);

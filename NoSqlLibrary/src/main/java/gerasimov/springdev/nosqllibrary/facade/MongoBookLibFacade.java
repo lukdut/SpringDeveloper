@@ -1,5 +1,7 @@
 package gerasimov.springdev.nosqllibrary.facade;
 
+import gerasimov.springdev.nosqllibrary.actuator.annotation.BookAddition;
+import gerasimov.springdev.nosqllibrary.actuator.annotation.BookDeletion;
 import gerasimov.springdev.nosqllibrary.model.Book;
 import gerasimov.springdev.nosqllibrary.repository.BookRepository;
 import gerasimov.springdev.nosqllibrary.security.BookIdentityRetrieval;
@@ -39,6 +41,7 @@ public class MongoBookLibFacade implements BookLibFacade {
     //А если например захотеть еще дать разрешение всем у кого есть разрешение DELETE, то придется писать тоже кастомный
     //метод в бине, тк "hasPermission" не заюзать ибо нужно еще ID сконвертить в нужный формат?
     @PreAuthorize("@ownershipChecker.isOwner(#id)")
+    @BookDeletion
     public void deleteBook(String id) {
         bookRepository.deleteById(id);
         aclService.deleteAcl(new ObjectIdentityImpl(Book.class, BookIdentityRetrieval.idFromString(id)), true);
@@ -51,6 +54,7 @@ public class MongoBookLibFacade implements BookLibFacade {
     }
 
     @Override
+    @BookAddition
     public String addBook(Book book) {
         String id = bookRepository.save(book).getId();
         // создать SID-ы для владельца и пользователя
