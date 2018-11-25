@@ -20,3 +20,13 @@ spring:
   shell:
     interactive:
       enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    root: WARN
+    gerasimov.springdev: DEBUG
+  file: log.txt
