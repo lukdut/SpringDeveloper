@@ -1,5 +1,6 @@
 package gerasimov.springdev.nosqllibrary.facade;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import gerasimov.springdev.nosqllibrary.actuator.annotation.BookAddition;
 import gerasimov.springdev.nosqllibrary.actuator.annotation.BookDeletion;
 import gerasimov.springdev.nosqllibrary.model.Book;
@@ -17,10 +18,14 @@ import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Sid;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class MongoBookLibFacade implements BookLibFacade {
+    private static final String DB_READ = "DB_READ_DATA";
+    private static final String DB_WRITE = "DB_WRITE_DATA";
     final BookRepository bookRepository;
 
     //Да простят меня боги_вайринга_через_конструктор
@@ -32,6 +37,7 @@ public class MongoBookLibFacade implements BookLibFacade {
     }
 
     @Override
+    @HystrixCommand(groupKey = DB_READ, commandKey = "allBooks")
     public List<Book> allBooks() {
         return bookRepository.findAll();
     }
@@ -42,6 +48,7 @@ public class MongoBookLibFacade implements BookLibFacade {
     //метод в бине, тк "hasPermission" не заюзать ибо нужно еще ID сконвертить в нужный формат?
     @PreAuthorize("@ownershipChecker.isOwner(#id)")
     @BookDeletion
+    @HystrixCommand(groupKey = DB_WRITE, commandKey = "deleteBook")
     public void deleteBook(String id) {
         bookRepository.deleteById(id);
         aclService.deleteAcl(new ObjectIdentityImpl(Book.class, BookIdentityRetrieval.idFromString(id)), true);
@@ -49,12 +56,14 @@ public class MongoBookLibFacade implements BookLibFacade {
 
     @Override
     @PreAuthorize("hasPermission(#book, 'WRITE')")
+    @HystrixCommand(groupKey = DB_WRITE, commandKey = "updateBook")
     public void updateBook(Book book) {
         bookRepository.save(book);
     }
 
     @Override
     @BookAddition
+    @HystrixCommand(groupKey = DB_WRITE, commandKey = "addBook")
     public String addBook(Book book) {
         String id = bookRepository.save(book).getId();
         // создать SID-ы для владельца и пользователя
