@@ -17,3 +17,13 @@ spring:
     console:
       enabled: true
       path: /console
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    root: WARN
+    gerasimov.springdev: DEBUG
+  file: log.txt
