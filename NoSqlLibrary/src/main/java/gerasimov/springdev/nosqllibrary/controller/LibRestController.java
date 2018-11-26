@@ -4,6 +4,7 @@ import gerasimov.springdev.nosqllibrary.facade.BookLibFacade;
 import gerasimov.springdev.nosqllibrary.model.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class LibRestController {
     private static final Logger LOG = LoggerFactory.getLogger(LibRestController.class);
     private final BookLibFacade libraryFacade;
 
-    public LibRestController(BookLibFacade libraryFacade) {
+    public LibRestController(@Qualifier("mongoBookLibFacade") BookLibFacade libraryFacade) {
         this.libraryFacade = libraryFacade;
     }
 

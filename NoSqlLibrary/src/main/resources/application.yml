@@ -30,3 +30,5 @@ logging:
     root: WARN
     gerasimov.springdev: DEBUG
   file: log.txt
+hystrix:
+  shareSecurityContext: true
